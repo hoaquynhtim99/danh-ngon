@@ -1,0 +1,69 @@
+﻿.dn-quote-top{
+	background:url('../images/danh-ngon/quote-small-bottom_01.gif') no-repeat 0 0;
+	padding-left:15px;
+}
+.dn-quote-top .dn-quote-right{
+	background:url('../images/danh-ngon/quote-small-bottom_03.gif') no-repeat right 0;
+	padding-right:15px;
+}
+.dn-quote-top .dn-quote-right .dn-quote-content{
+	background:url('../images/danh-ngon/quote-small-bottom_02.gif') repeat-x 0 0;
+	height:15px;
+}
+.dn-quote-mid{
+	background:url('../images/danh-ngon/quote-small-bottom_04.gif') repeat-y 0 0;
+	padding-left:15px;
+}
+.dn-quote-mid .dn-quote-right{
+	background:url('../images/danh-ngon/quote-small-bottom_06.gif') repeat-y right 0;
+	padding-right:15px;
+}
+.dn-quote-mid .dn-quote-right .dn-quote-content{
+	background:url('../images/danh-ngon/quote-small-bottom_05.gif') repeat 0 0;
+}
+.dn-quote-bottom{
+	background:url('../images/danh-ngon/quote-small-bottom_07.gif') no-repeat 0 0;
+	padding-left:15px;
+}
+.dn-quote-bottom .dn-quote-right{
+	background:url('../images/danh-ngon/quote-small-bottom_09.png') no-repeat right 0;
+	padding-right:15px;
+}
+.dn-quote-bottom .dn-quote-right .dn-quote-content{
+	background:url('../images/danh-ngon/quote-small-bottom_08.gif') repeat-x 0 0;
+	height:36px;
+}
+
+.dn-tags{
+	margin-bottom:20px;
+	margin-top:3px;
+}
+.dn-tags a{
+	display:inline-block;
+	height:23px;
+	line-height:23px;
+	background:url('../images/danh-ngon/tags.bg.png') no-repeat right -69px;
+	padding-right:10px;
+	margin-right:10px;
+}
+.dn-tags a span{
+	display:inline-block;
+	height:23px;
+	line-height:23px;
+	background:url('../images/danh-ngon/tags.bg.png') no-repeat 0 -46px;
+	padding-left:20px;
+}
+.dn-tags a:hover{
+	background:url('../images/danh-ngon/tags.bg.png') no-repeat right -23px;
+}
+.dn-tags a:hover span{
+	background:url('../images/danh-ngon/tags.bg.png') no-repeat 0 0;
+}
+.fix-dn-tags{
+	margin-bottom:0;
+	margin-top:0;
+}
+.fix-dn-tags a{
+	margin-bottom:10px
+}
+
