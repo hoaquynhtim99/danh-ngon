@@ -116,6 +116,27 @@ if ($nv_Request->isset_request('action', 'post,get') && $nv_Request->isset_reque
     }
 }
 
+// Xóa nhiều
+if ($nv_Request->isset_request('btn_delete','post, get')) {
+    $id = $nv_Request->get_typed_array('idcheck', 'post', 'int', []);
+    if (empty($id)) {
+        $error[] = $nv_Lang->getModule('error_required_id');
+    }
+
+    if (empty($error)) {
+        $id = implode(',', $id);
+        $sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_authors WHERE id IN (' . $id . ')';
+        if ($db->exec($sql)) {
+            nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete_Authour', 'ID: ' . $id, $admin_info['userid']);
+            $nv_Cache->delMod($module_name);
+            nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+        } else {
+            $error[] = $nv_Lang->getModule('error_delete');
+        }
+    }
+}
+
+// Nếu id > 0 thì lấy kết quả ra $data
 if ($data['id'] > 0) {
     $data = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id = " . $data['id'])->fetch();
     if (empty($data)) {
@@ -155,11 +176,16 @@ $xtpl->assign('TOTAL', $total);
 $xtpl->assign('NV_UPLOADS_DIR', NV_UPLOADS_DIR);
 $xtpl->assign('MODULE_UPLOAD', $module_upload);
 
+// Hiển thị danh sách
 if (!empty($array_list)) {
     $i = ($page - 1) * $perpage;
     foreach ($array_list as $row) {
         $row['stt'] = ++$i;
-        $row['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . basename($row['image']);
+        if (empty($row['image'])) {
+            $row['image'] = '';
+        } else {
+            $row['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . basename($row['image']);
+        }
         $row['url_edit'] = $base_url . '&id=' . $row['id'];
         $row['url_delete'] = $base_url . '&id=' . $row['id'] . '&action=delete&checksess=' . md5($row['id'] . NV_CHECK_SESSION);
         $xtpl->assign('ROW', $row);

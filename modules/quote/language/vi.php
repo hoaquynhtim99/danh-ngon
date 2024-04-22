@@ -114,6 +114,7 @@ $lang_module['name_authour'] = 'Tên tác giả';
 $lang_module['description_authour'] = 'Mô tả ngắn gọn';
 $lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
 $lang_module['image_authour'] = 'Ảnh đại diện';
+$lang_module['error_required_id'] = 'Lỗi: Bạn cần chọn id để xóa';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';
 $lang_module['add_quote'] = 'Thêm danh ngôn';
