@@ -47,7 +47,6 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   description text NOT NULL COMMENT 'Mô tả ngắn gọn',
   bodyhtml longtext NOT NULL COMMENT 'Chi tiết',
   image varchar(255) NOT NULL DEFAULT '' COMMENT 'Ảnh mô tả',
-  keywords text NOT NULL COMMENT 'Từ khóa, phân cách bởi dấu phảy',
   admin_id int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID người đăng',
   addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
