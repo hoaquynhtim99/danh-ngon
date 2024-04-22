@@ -162,13 +162,13 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
             $weight = intval($db->query($sql)->fetchColumn()) + 1;
 
             $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_cats (
-                title, description, weight, add_time, edit_time
+                title, description, weight, addtime, updatetime
             ) VALUES (
                 :title, :description, " . $weight . ", " . NV_CURRENTTIME . ", 0
             )";
         } else {
             $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_cats SET
-                title = :title, description = :description, edit_time = " . NV_CURRENTTIME . "
+                title = :title, description = :description, updatetime = " . NV_CURRENTTIME . "
             WHERE id = " . $id;
         }
 

@@ -31,6 +31,7 @@ $lang_module['search_keywords'] = 'Từ khóa tìm kiếm';
 $lang_module['description'] = 'Mô tả';
 $lang_module['illustrating_images'] = 'Ảnh minh họa';
 $lang_module['note'] = 'Chú ý';
+$lang_module['total_db'] = 'Tổng số dữ liệu';
 $lang_module['enter_search_key'] = 'Nhập danh mục';
 $lang_module['select2_pick'] = 'Nhập danh mục để tìm và chọn';
 $lang_module['edittime'] = 'Cập nhật lúc';
@@ -40,6 +41,7 @@ $lang_module['to'] = 'đến';
 $lang_module['from_day'] = 'Từ ngày';
 $lang_module['to_day'] = 'Đến ngày';
 $lang_module['is_required'] = 'là mục bắt buộc';
+$lang_module['confirm_delete'] = 'Bạn có chắc chắn muốn xóa không?';
 
 $lang_module['goto'] = 'Chuyển đến';
 $lang_module['page'] = 'Trang %s';
@@ -94,3 +96,24 @@ $lang_module['cats_error_exist'] = 'Lỗi: Danh mục này đã có';
 $lang_module['cats_manager'] = 'Quản lý danh mục';
 
 $lang_module['main_list'] = 'Danh sách danh ngôn';
+
+$lang_module['authour_admin'] = 'Quản lý Tác giả';
+$lang_module['list_authour'] = 'Danh sách tác giả';
+$lang_module['add_authour'] = 'Thêm tác giả';
+$lang_module['cats_id'] = 'Chọn danh mục';
+$lang_module['name_authour'] = 'Tên tác giả';
+$lang_module['description_authour'] = 'Mô tả ngắn gọn về tác giả';
+$lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
+$lang_module['image_authour'] = 'Ảnh đại diện';
+$lang_module['select_image'] = 'Chưa chọn file nào';
+$lang_module['url_cancel'] = 'Hủy bỏ';
+$lang_module['error_required_catid'] = 'Lỗi: Bạn cần chọn danh mục';
+$lang_module['error_required_name_author'] = 'Lỗi: Bạn cần nhập tên tác giả';
+$lang_module['error_duplicate_name_author'] = 'Lỗi: Tên tác giả này đã có';
+$lang_module['name_authour'] = 'Tên tác giả';
+$lang_module['description_authour'] = 'Mô tả ngắn gọn';
+$lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
+$lang_module['image_authour'] = 'Ảnh đại diện';
+
+$lang_module['quote_admin'] = 'Quản lý danh ngôn';
+$lang_module['add_quote'] = 'Thêm danh ngôn';
