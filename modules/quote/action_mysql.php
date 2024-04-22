@@ -52,7 +52,6 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
   status tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Trạng thái hoạt động: 0: Dừng, 1: Hoạt động',
   PRIMARY KEY (id),
-  KEY catids (catids),
   KEY addtime (addtime),
   KEY updatetime (updatetime),
   KEY status (status)
