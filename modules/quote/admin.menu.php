@@ -16,7 +16,7 @@ if (!defined('NV_ADMIN')) {
 $allow_func = [
     'main',
     'content',
-    'tags',
+    'cats',
 ];
 
-$submenu['tags'] = $nv_Lang->getModule('tags');
+$submenu['cats'] = $nv_Lang->getModule('cats_manager');
