@@ -235,7 +235,7 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
         }
     }
 }
-
+// Nếu có hình ảnh thì hiển thị
 if (!empty($array['image']) and nv_is_file(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . $array['image'], NV_UPLOADS_DIR . '/' . $module_upload)) {
     $array['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . $array['image'];
     $currentpath = substr(dirname($array['image']), strlen(NV_BASE_SITEURL));
@@ -248,6 +248,10 @@ $db->select('*')->order('id ASC')->limit($per_page)->offset(($page - 1) * $per_p
 $result = $db->query($db->sql());
 while ($row = $result->fetch()) {
     $array_cats[] = $row;
+}
+
+if ($page > 1 and empty($array_cats)) {
+    nv_redirect_location($base_url);
 }
 
 $xtpl = new XTemplate('authour.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
@@ -286,7 +290,6 @@ if (!empty($array_cats)) {
         $xtpl->parse('main.generate_page');
     }
 }
-
 
 // Hiển thị nút lấy alias
 if (empty($array['alias'])) {

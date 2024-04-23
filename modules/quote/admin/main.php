@@ -18,7 +18,7 @@ if ($nv_Request->get_title('changestatus', 'post', '') === NV_CHECK_SESSION) {
     $id = $nv_Request->get_int('id', 'post', 0);
 
     // Kiểm tra tồn tại
-    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_rows WHERE id=" . $id;
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id = " . $id;
     $array = $db->query($sql)->fetch();
     if (empty($array)) {
         nv_htmlOutput('NO_' . $id);
@@ -26,7 +26,7 @@ if ($nv_Request->get_title('changestatus', 'post', '') === NV_CHECK_SESSION) {
 
     $status = empty($array['status']) ? 1 : 0;
 
-    $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_rows SET status = " . $status . " WHERE id = " . $id;
+    $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET status = " . $status . " WHERE id = " . $id;
     $db->query($sql);
 
     nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_CHANGE_STATUS_CONTENT', json_encode($array), $admin_info['admin_id']);
@@ -44,13 +44,13 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
 
     foreach ($listid as $id) {
         // Kiểm tra tồn tại
-        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_rows WHERE id=" . $id;
+        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $id;
         $array = $db->query($sql)->fetch();
         if (!empty($array)) {
             nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_CONTENT', json_encode($array), $admin_info['admin_id']);
 
             // Xóa
-            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_rows WHERE id=" . $id;
+            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $id;
             $db->query($sql);
         }
     }
@@ -97,11 +97,11 @@ if (!empty($array_search['q'])) {
 }
 if (!empty($array_search['from'])) {
     $base_url .= '&amp;f=' . nv_date('d-m-Y', $array_search['from']);
-    $where[] = "add_time>=" . $array_search['from'];
+    $where[] = "addtime>=" . $array_search['from'];
 }
 if (!empty($array_search['to'])) {
     $base_url .= '&amp;t=' . nv_date('d-m-Y', $array_search['to']);
-    $where[] = "add_time<=" . $array_search['to'];
+    $where[] = "addtime<=" . $array_search['to'];
 }
 
 // Phần sắp xếp
@@ -114,7 +114,7 @@ if ($page > 1) {
 }
 
 // Định nghĩa các field và các value được phép sắp xếp
-$order_fields = ['title', 'add_time', 'edit_time'];
+$order_fields = ['content', 'addtime', 'updatetime'];
 $order_values = ['asc', 'desc'];
 
 if (!in_array($array_order['field'], $order_fields)) {
@@ -154,15 +154,15 @@ $array_search['to'] = empty($array_search['to']) ? '' : nv_date('d-m-Y', $array_
 $xtpl->assign('SEARCH', $array_search);
 
 while ($row = $result->fetch()) {
-    if (!empty($global_array_cats[$row['catid']]['status'])) {
+    if (!empty($global_array_cats[$row['catids']]['status'])) {
         $row['link'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_cats[$row['catid']]['alias'] . '/' . $row['alias'] . $global_config['rewrite_exturl'];
     } else {
         $row['link'] = '';
     }
     $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=content&amp;id=' . $row['id'];
     $row['status_render'] = $row['status'] ? ' checked="checked"' : '';
-    $row['add_time'] = nv_date('d/m/Y H:i', $row['add_time']);
-    $row['edit_time'] = $row['edit_time'] ? nv_date('d/m/Y H:i', $row['edit_time']) : '';
+    $row['addtime'] = nv_date('d/m/Y H:i', $row['addtime']);
+    $row['updatetime'] = $row['updatetime'] ? nv_date('d/m/Y H:i', $row['updatetime']) : '';
 
     $xtpl->assign('ROW', $row);
     $xtpl->parse('main.loop');
@@ -174,7 +174,6 @@ if (!empty($generate_page)) {
     $xtpl->assign('GENERATE_PAGE', $generate_page);
     $xtpl->parse('main.generate_page');
 }
-
 // Xuất các phần sắp xếp
 foreach ($order_fields as $field) {
     $url = $base_url_order;

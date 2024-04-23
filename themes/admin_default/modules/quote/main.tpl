@@ -65,13 +65,13 @@ $(document).ready(function() {
                         <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
                     </th>
                     <th style="width: 40%" class="text-nowrap">
-                        <a href="{URL_ORDER_TITLE}">{ICON_ORDER_TITLE} {LANG.title}</a>
+                        <a href="{URL_ORDER_CONTENT}">{ICON_ORDER_TITLE} {LANG.title}</a>
                     </th>
                     <th style="width: 15%" class="text-nowrap">
-                        <a href="{URL_ORDER_ADD_TIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
+                        <a href="{URL_ORDER_ADDTIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
                     </th>
                     <th style="width: 15%" class="text-nowrap">
-                        <a href="{URL_ORDER_EDIT_TIME}">{ICON_ORDER_EDIT_TIME} {LANG.edittime}</a>
+                        <a href="{URL_ORDER_EDITTIME}">{ICON_ORDER_EDIT_TIME} {LANG.edittime}</a>
                     </th>
                     <th style="width: 15%" class="text-nowrap text-center">{LANG.status}</th>
                     <th style="width: 14%" class="text-nowrap text-center">{LANG.function}</th>
@@ -83,9 +83,9 @@ $(document).ready(function() {
                     <td class="text-center">
                         <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
                     </td>
-                    <td><a target="_blank" href="{ROW.link}"><strong>{ROW.title}</strong></a></td>
-                    <td class="text-nowrap">{ROW.add_time}</td>
-                    <td class="text-nowrap">{ROW.edit_time}</td>
+                    <td><a target="_blank" href="{ROW.link}"><strong>{ROW.content}</strong></a></td>
+                    <td class="text-nowrap">{ROW.addtime}</td>
+                    <td class="text-nowrap">{ROW.updatetime}</td>
                     <td class="text-center">
                         <input name="status" id="change_status{ROW.id}" value="1" type="checkbox"{ROW.status_render} onclick="nv_change_content_status('{ROW.id}', '{NV_CHECK_SESSION}');">
                     </td>
