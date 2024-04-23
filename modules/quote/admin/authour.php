@@ -14,234 +14,258 @@ if (!defined('NV_IS_FILE_ADMIN')) {
 }
 
 $page_title = $nv_Lang->getModule('authour_admin');
+$array = $error = [];
 $base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
+$is_submit_form = $is_edit = false;
+$currentpath = NV_UPLOADS_DIR . '/' . $module_upload;
+$id = $nv_Request->get_absint('id', 'get', 0);
 
-$error = [];
+if ($nv_Request->get_title('changealias', 'post', '') === NV_CHECK_SESSION) {
+    $name_author = $nv_Request->get_title('name_author', 'post', '');
+    $id = $nv_Request->get_absint('id', 'post', 0);
 
-$data = [
-    'name_author' => '',
-    'description' => '',
-    'bodyhtml' => '',
-    'image' => '',
-];
+    $alias = strtolower(change_alias($name_author));
 
-$request = $nv_Request->get_int('request', 'post, get', 0);
-$data['id'] = $nv_Request->get_absint('id', 'post,get', 0);
-$caption = $nv_Lang->getModule('add_authour');
+    $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id !=" . $id . " AND alias = :alias");
+    $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
+    $stmt->execute();
 
-if ($nv_Request->isset_request('save','post, get')) {
-    $data['name_author'] = $nv_Request->get_title('name_author', 'post', '');
-    $data['alias'] = change_alias($data['name_author']);
-    $data['description'] = $nv_Request->get_textarea('description', '', NV_ALLOWED_HTML_TAGS);
-    $data['bodyhtml'] = $nv_Request->get_textarea('bodyhtml', '', NV_ALLOWED_HTML_TAGS);
-    $data['image'] = $nv_Request->get_title('image', 'post', '');
-
-    // Kiểm tra lỗi nếu có
-    if (empty($data['name_author'])) {
-        $error[] = $nv_Lang->getModule('error_required_name_author');
+    if ($stmt->fetchColumn()) {
+        $weight = $db->query("SELECT MAX(id) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors")->fetchColumn();
+        $weight = intval($weight) + 1;
+        $alias = $alias . '-' . $weight;
     }
 
-    $is_duplicate = false;
-    $sth = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE name_author = :name_author");
-    $sth->bindParam(':name_author', $data['name_author'], PDO::PARAM_STR);
+    include NV_ROOTDIR . '/includes/header.php';
+    echo $alias;
+    include NV_ROOTDIR . '/includes/footer.php';
+}
+
+// Thay đổi weight
+if ($nv_Request->get_title('changeweight', 'post', '') === NV_CHECK_SESSION) {
+    $id = $nv_Request->get_absint('id', 'post', 0);
+    $new_weight = $nv_Request->get_absint('new_weight', 'post', 0);
+
+    // Kiểm tra tồn tại
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id=" . $id;
+    $array = $db->query($sql)->fetch();
+    if (empty($array)) {
+        nv_htmlOutput('NO_' . $id);
+    }
+    if (empty($new_weight)) {
+        nv_htmlOutput('NO_' . $id);
+    }
+
+    $sql = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id!=" . $id . "  ORDER BY weight ASC";
+    $result = $db->query($sql);
+
+    $weight = 0;
+    while ($row = $result->fetch()) {
+        ++$weight;
+        if ($weight == $new_weight) {
+            ++$weight;
+        }
+        $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_authors SET weight=" . $weight . " WHERE id=" . $row['id'];
+        $db->query($sql);
+    }
+
+    $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_authors SET weight=" . $new_weight . " WHERE id=" . $id;
+    $db->query($sql);
+
+
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_CHANGE_WEIGHT_AUTHOUR', json_encode($array), $admin_info['admin_id']);
+    $nv_Cache->delMod($module_name);
+    nv_htmlOutput('OK_' . $id);
+}
+
+if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
+    $id = $nv_Request->get_absint('id', 'post', 0);
+
+    // Kiểm tra tồn tại
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id=" . $id;
+    $array = $db->query($sql)->fetch();
+    if (empty($array)) {
+        nv_htmlOutput('NO_' . $id);
+    }
+
+    // Lấy hết ID chủ đề con và ID chính nó
+
+    $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id = " . $id;
+    $db->query($sql);
+
+
+
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_AUTHOUR', json_encode($array), $admin_info['admin_id']);
+    $nv_Cache->delMod($module_name);
+
+    nv_htmlOutput("OK");
+}
+
+if (!empty($id)) {
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id = " . $id;
+    $result = $db->query($sql);
+    $array = $result->fetch();
+
+    if (empty($array)) {
+        nv_info_die($nv_Lang->getGlobal('error_404_title'), $nv_Lang->getGlobal('error_404_title'), $nv_Lang->getGlobal('error_404_content'));
+    }
+
+    $is_edit = true;
+    $caption = $nv_Lang->getModule('edit_authour');
+    $form_action = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;id=' . $id;
+} else {
+    $array = [
+        'id' => 0,
+        'name_author' => '',
+        'alias' => '',
+        'description' => '',
+        'bodyhtml' => '',
+        'image' => '',
+    ];
+
+    $caption = $nv_Lang->getModule('add_authour');
+    $form_action = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
+}
+
+if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
+    $is_submit_form = true;
+    $array['name_author'] = $nv_Request->get_title('name_author', 'post', '');
+    $array['alias'] = nv_substr($nv_Request->get_title('alias', 'post', ''), 0, 190);
+    $array['description'] = $nv_Request->get_string('description', 'post', '');
+    $array['bodyhtml'] = $nv_Request->get_editor('bodyhtml', '', NV_ALLOWED_HTML_TAGS);
+    $array['image'] = nv_substr($nv_Request->get_title('image', 'post', ''), 0, 255);
+
+    $array['alias'] = empty($array['alias']) ? change_alias($array['name_author']) : change_alias($array['alias']);
+    $array['description'] = nv_nl2br(nv_htmlspecialchars(strip_tags($array['description'])), '<br />');
+
+    if (nv_is_file($array['image'], NV_UPLOADS_DIR . '/' . $module_upload)) {
+        $array['image'] = substr($array['image'], strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/'));
+    } else {
+        $array['image'] = '';
+    }
+
+    $is_exists = false;
+    $sql = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE alias = :alias" . ($id ? ' AND id != ' . $id : '');
+    $sth = $db->prepare($sql);
+    $sth->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
     $sth->execute();
     if ($sth->fetchColumn()) {
-        $is_duplicate = true;
+        $is_exists = true;
     }
 
+    if (empty($array['name_author'])) {
+        $error[] = $nv_Lang->getModule('error_required_name_author');
+    } elseif ($is_exists) {
+        $error[] = $nv_Lang->getModule('error_duplicate_name_author');
+    }
 
-    // Nếu không lỗi thì hiện thêm hoặc sửa
     if (empty($error)) {
-        try {
-            if ($data['id'] > 0) {
-                $stmt = $db->prepare("UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_authors SET
-                 name_author = :name_author,
-                 alias = :alias,
-                 description = :description,
-                 bodyhtml = :bodyhtml,
-                 image = :image,
-                 admin_id = :admin_id,
-                 updatetime = :updatetime
-                 WHERE id = " . $data['id']);
-                $stmt->bindValue(':updatetime', NV_CURRENTTIME);
-            } else {
-                // Kiểm tra trùng rồi mới thêm mới
-                if ($is_duplicate) {
-                    $error[] = $nv_Lang->getModule('error_duplicate_name_author');
-                }
+        if (!$id) {
+            $sql = "SELECT MAX(weight) weight FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors";
+            $weight = intval($db->query($sql)->fetchColumn()) + 1;
 
-                $stmt = $db->prepare("INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors
-                (name_author, alias, description, bodyhtml, image, admin_id, addtime) VALUES
-                (:name_author, :alias, :description, :bodyhtml, :image, :admin_id, :addtime)");
-                $stmt->bindValue(':addtime', NV_CURRENTTIME);
-            }
-            $stmt->bindParam(':name_author', $data['name_author'], PDO::PARAM_STR);
-            $stmt->bindParam(':alias', $data['alias'], PDO::PARAM_STR);
-            $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
-            $stmt->bindParam(':bodyhtml', $data['bodyhtml'], PDO::PARAM_STR);
-            $stmt->bindParam(':image', $data['image'], PDO::PARAM_STR);
-            $stmt->bindParam(':admin_id', $admin_info['admin_id'], PDO::PARAM_INT);
-            $stmt->execute();
+            $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors 
+            (name_author, alias, description, bodyhtml, image, admin_id, addtime, updatetime, weight) 
+            VALUES 
+            (:name_author, :alias, :description, :bodyhtml, :image, " . $admin_info['admin_id'] . ", " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", " . $weight . ")";
 
-            // sau khi sửa lưu log
-            if ($data['id'] > 0 ) {
-                nv_insert_logs(NV_LANG_DATA, $module_name, 'log_edit_authour', 'id ' . $data['id'], $admin_info['userid']);
-            } else {
-                nv_insert_logs(NV_LANG_DATA, $module_name, 'log_add_authour', ' ', $admin_info['userid']);
-            }
-            $nv_Cache->delMod($module_name);
-            nv_redirect_location($base_url .'&request=1');
-        } catch (PDOException $e) {
-            trigger_error($e->getMessage());
-            $error[] = $nv_Lang->getModule('errorsave');
-        }
-    }
-}
+            $data_insert = [];
+            $data_insert['name_author'] = $array['name_author'];
+            $data_insert['alias'] = $array['alias'];
+            $data_insert['description'] = $array['description'];
+            $data_insert['bodyhtml'] = $array['bodyhtml'];
+            $data_insert['image'] = $array['image'];
 
-if ($nv_Request->isset_request('action', 'post,get') && $nv_Request->isset_request('id', 'post,get')) {
-    if ($data['id'] > 0) {
-        if ($nv_Request->get_title('checksess', 'post,get', '') === md5($data['id'] . NV_CHECK_SESSION)) {
-            $sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_authors WHERE id = :id';
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                nv_insert_logs(NV_LANG_DATA, $module_name, 'log_delete_authour', 'id ' . $data['id'], $admin_info['userid']);
+            $new_id = $db->insert_id($sql, 'id', $data_insert);
+
+            if (!empty($new_id)) {
                 $nv_Cache->delMod($module_name);
-                nv_redirect_location($base_url);
+                nv_insert_logs(NV_LANG_DATA, $module_name, 'log_add_author', 'id ' . $new_id, $admin_info['userid']);
+                nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=authour');
             } else {
-                $error[] = $nv_Lang->getModule('error_delete');
+                $error[] = $nv_Lang->getModule('errorsave');
             }
         } else {
-            $error[] = $nv_Lang->getModule('error_accuracy');
-        }
-    }
-}
+            $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_authors SET
+            name_author = :name_author,
+            alias = :alias,
+            description = :description,
+            bodyhtml = :bodyhtml,
+            image = :image,
+            updatetime = " . NV_CURRENTTIME . "
+            WHERE id = " . $id;
+            $sth = $db->prepare($sql);
+            $sth->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
+            $sth->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
+            $sth->bindParam(':description', $array['description'], PDO::PARAM_STR);
+            $sth->bindParam(':bodyhtml', $array['bodyhtml'], PDO::PARAM_STR);
+            $sth->bindParam(':image', $array['image'], PDO::PARAM_STR);
+            $sth->execute();
 
-// Xóa nhiều
-if ($nv_Request->isset_request('btn_delete','post, get')) {
-    $id = $nv_Request->get_typed_array('idcheck', 'post', 'int', []);
-    if (empty($id)) {
-        $error[] = $nv_Lang->getModule('error_required_id');
-    }
-
-    if (empty($error)) {
-        $id = implode(',', $id);
-        $sql = 'DELETE FROM ' . NV_PREFIXLANG . '_' . $module_data . '_authors WHERE id IN (' . $id . ')';
-        if ($db->exec($sql)) {
-            nv_insert_logs(NV_LANG_DATA, $module_name, 'Delete_Authour', 'ID: ' . $id, $admin_info['userid']);
             $nv_Cache->delMod($module_name);
-            nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
-        } else {
-            $error[] = $nv_Lang->getModule('error_delete');
+            nv_insert_logs(NV_LANG_DATA, $module_name, 'log_edit_author', 'id ' . $id, $admin_info['userid']);
+            nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=authour');
         }
     }
 }
 
-// Nếu id > 0 thì lấy kết quả ra $data
-if ($data['id'] > 0) {
-    $caption = $nv_Lang->getModule('edit_authour');
-    $data = $db->query("SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id = " . $data['id'])->fetch();
-    if (empty($data)) {
-        nv_redirect_location($base_url);
-    }
-}
-
-// Hiển thị giao diện
-$perpage = 20;
-$page = $nv_Request->get_int('page', 'get', 1);
-
-$where = [];
-$arr_search = [
-    'search' => 0,
-    'q' => $nv_Request->get_title('q', 'get', ''),
-];
-
-if ($nv_Request->isset_request('search', 'post, get')) {
-    $arr_search['search'] = 1;
-    $arr_search['q'] = $nv_Request->get_title('q', 'get', '');
-
-    if (!empty($arr_search['q'])) {
-        $where[] = "name_author LIKE '%" . $db->dblikeescape($arr_search['q']) . "%'";
-        $base_url .= '&q=' . $arr_search['q'];
-    }
-}
-
-// Đếm tổng số dữ liệu
-$db->sqlreset()
-    ->select('COUNT(*)')
-    ->from(NV_PREFIXLANG . '_' . $module_data . '_authors');
-if (!empty($where)) {
-    $db->where(implode(' AND ', $where));
-}
-$total = $db->query($db->sql())->fetchColumn();
-
-$db->select('*')
-    ->order('id DESC')
-    ->limit($perpage)
-    ->offset(($page - 1) * $perpage);
-$sth = $db->prepare($db->sql());
-$sth->execute();
-$array_list = [];
-while ($row = $sth->fetch()) {
-    $array_list[] = $row;
-}
-
-// Nếu không có dữ liệu thì chuyển về trang 1
-if ($page > 1 and empty($array_list)) {
-    nv_redirect_location($base_url);
+if (!empty($array['image']) and nv_is_file(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . $array['image'], NV_UPLOADS_DIR . '/' . $module_upload)) {
+    $array['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . $array['image'];
+    $currentpath = substr(dirname($array['image']), strlen(NV_BASE_SITEURL));
 }
 
 $xtpl = new XTemplate('authour.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
 $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
-$xtpl->assign('TOTAL', $total);
-$xtpl->assign('NV_UPLOADS_DIR', NV_UPLOADS_DIR);
-$xtpl->assign('MODULE_UPLOAD', $module_upload);
-$xtpl->assign('SEARCH', $arr_search);
-$xtpl->assign('NV_LANG_VARIABLE', NV_LANG_VARIABLE);
-$xtpl->assign('NV_LANG_DATA', NV_LANG_DATA);
-$xtpl->assign('NV_BASE_ADMINURL', NV_BASE_ADMINURL);
-$xtpl->assign('NV_NAME_VARIABLE', NV_NAME_VARIABLE);
-$xtpl->assign('NV_OP_VARIABLE', NV_OP_VARIABLE);
-$xtpl->assign('OP', $op);
-$xtpl->assign('MODULE_NAME', $module_name);
-$xtpl->assign('URL', $base_url);
 $xtpl->assign('CAPTION', $caption);
+$xtpl->assign('FORM_ACTION', $form_action);
+$xtpl->assign('DATA', $array);
 
-if ($request) {
-    $xtpl->assign('DATA', $data);
-    $xtpl->parse('main.request');
-} else {
-    $xtpl->parse('main.search');
+$xtpl->assign('UPLOAD_CURRENT', $currentpath);
+$xtpl->assign('UPLOAD_PATH', NV_UPLOADS_DIR . '/' . $module_upload);
+
+$sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors ORDER BY weight ASC";
+$array_cats = $db->query($sql)->fetchAll();
+$num = sizeof($array_cats);
+
+foreach ($array_cats as $row) {
+    for ($i = 1; $i <= $num; ++$i) {
+        $xtpl->assign('WEIGHT', [
+            'w' => $i,
+            'selected' => ($i == $row['weight']) ? ' selected="selected"' : ''
+        ]);
+
+        $xtpl->parse('main.loop.weight');
+    }
+    if (empty($row['image'])) {
+        $row['image'] = NV_STATIC_URL . 'themes/default/images/users/no_avatar.png';
+    } else {
+        $row['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . basename($row['image']);
+    }
+    $row['url_edit'] = $base_url . '&id=' . $row['id'];
+    $xtpl->assign('ROW', $row);
+    $xtpl->parse('main.loop');
 }
 
-// Hiển thị danh sách
-if (!empty($array_list)) {
-    $i = ($page - 1) * $perpage;
-    foreach ($array_list as $row) {
-        $row['stt'] = ++$i;
-        if (empty($row['image'])) {
-            $row['image'] = '';
-        } else {
-            $row['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . basename($row['image']);
-        }
-        $row['url_edit'] = $base_url . '&request=1&id=' . $row['id'];
-        $row['url_delete'] = $base_url . '&id=' . $row['id'] . '&action=delete&checksess=' . md5($row['id'] . NV_CHECK_SESSION);
-        $xtpl->assign('ROW', $row);
-        $xtpl->parse('main.loop');
-    }
-
-    // Tạo phân trang
-    $generate_page = nv_generate_page($base_url, $total, $perpage, $page);
-    if (!empty($generate_page)) {
-        $xtpl->assign('GENERATE_PAGE', $generate_page);
-        $xtpl->parse('main.generate_page');
-    }
+// Hiển thị nút lấy alias
+if (empty($array['alias'])) {
+    $xtpl->parse('main.getalias');
 }
 
+// Xuất thông báo lỗi
 if (!empty($error)) {
     $xtpl->assign('ERROR', implode('<br />', $error));
     $xtpl->parse('main.error');
+}
+
+// Hiển thị nút thêm
+if (!$is_edit) {
+    $xtpl->parse('main.add_btn');
+}
+
+// Cuộn đến form
+if ($is_submit_form or $is_edit) {
+    $xtpl->parse('main.scroll');
 }
 
 $xtpl->parse('main');

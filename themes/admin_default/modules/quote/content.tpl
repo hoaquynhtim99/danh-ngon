@@ -1,54 +1,60 @@
 <!-- BEGIN: main -->
+<link rel="stylesheet" href="{ASSETS_STATIC_URL}/js/select2/select2.min.css">
+<script src="{ASSETS_STATIC_URL}/js/select2/select2.min.js"></script>
 <!-- BEGIN: error -->
-<div style="width: 98%;" class="quote">
-    <blockquote class="error">
-        <p>
-            <span>{ERROR}</span>
-        </p>
-    </blockquote>
+<div class="alert alert-danger">
+	{ERROR}
 </div>
-<div class="clear"></div>
 <!-- END: error -->
-<form action="{FORM_ACTION}" method="post">
-    <table class="tab1">
-		<col width="200px"/>
-		<caption>{TABLE_CAPTION}</caption>
+<form method="post">
+	<table class="table table-hover table-striped table-bordered">
+		<caption><strong><em class="fa fa-file-text-o"></em> {CAPTION}</strong></caption>
 		<tbody>
-			<tr>
-				<td><strong>{LANG.tags}</strong></td>
-				<td>
-					<div class="tags-area">
-						<!-- BEGIN: tags -->
-						<div class="tag-item">
-							<label>
-								<input type="checkbox" name="tags[]" value="{TAGS}"{CHECKED}/> {TAGS}
-							</label>
-						</div>
-						<!-- BEGIN: break --><div class="clear"></div><!-- END: break -->
-						<!-- END: tags -->
-					</div>
-				</td>
-			</tr>
-		</tbody>
-		<tbody class="second">
-			<tr>
-				<td><strong>{LANG.content_new_tags}</strong></td>
-				<td><input type="text" name="tags_news" value="" class="txt-full"/></td>
-			</tr>
-		</tbody>
-		<tbody>
-			<tr>
-				<td><strong>{LANG.content_content}</strong></td>
-				<td><textarea rows="3" class="txt-full" name="content">{DATA.content}</textarea></td>
-			</tr>
+		<tr>
+			<td class="text-center">{LANG.enter_search_key}</td>
+			<td>
+				<select class="form-control" id="catids" name="catids">
+					<option value="-1" disabled selected>{LANG.please_select}</option>
+					<!-- BEGIN: cat -->
+					<option value="{CAT.key}" {CAT.selected}>{CAT.title}</option>
+					<!-- END: cat -->
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="text-center">{LANG.name_authour}</td>
+			<td>
+				<select class="form-control" name="author_id" id="author_id">
+					<option value="-1" disabled selected>{LANG.please_select}</option>
+					<!-- BEGIN: author -->
+					<option value="{AUTHOR.key}"{AUTHOR.selected}>{AUTHOR.name_author}</option>
+					<!-- END: author -->
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="text-center">{LANG.content_content}</td>
+			<td><textarea name="content" rows="5" class="form-control">{DATA.content}</textarea></td>
+		</tr>
 		</tbody>
 		<tfoot>
-			<tr>
-				<td colspan="2" class="center">
-					<input type="submit" name="submit" value="{LANG.submit}" />
-				</td>
-			</tr>
+		<tr>
+			<td colspan="2" class="text-center">
+				<input type="hidden" name="submit" value="{NV_CHECK_SESSION}">
+				<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> {LANG.action}</button>
+			</td>
+		</tr>
 		</tfoot>
-    </table>
+	</table>
 </form>
+<script>
+	$(document).ready(function () {
+		$('#catids').select2({
+			placeholder: '{LANG.please_select}',
+			allowClear: true,
+			minimumInputLength: 3,
+		});
+		$('#author_id').select2({});
+	});
+</script>
 <!-- END: main -->

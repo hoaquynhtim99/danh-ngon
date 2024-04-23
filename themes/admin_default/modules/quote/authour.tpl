@@ -1,140 +1,170 @@
 <!-- BEGIN: main -->
-<script src="{ASSETS_STATIC_URL}/editors/ckeditor/ckeditor.js"></script>
-<!-- BEGIN: error -->
-<div class="alert alert-danger">
-    {ERROR}
+<!-- BEGIN: add_btn -->
+<div class="form-group">
+    <a href="#" data-toggle="add" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> {LANG.add_authour}</a>
 </div>
-<!-- END: error -->
-<!-- BEGIN: search -->
-<div class="well row">
-    <form action="{URL}" method="GET">
-        <input type="hidden" name="{NV_LANG_VARIABLE}" value="{NV_LANG_DATA}"/>
-        <input type="hidden" name="{NV_NAME_VARIABLE}" value="{MODULE_NAME}"/>
-        <input type="hidden" name="{NV_OP_VARIABLE}" value="{OP}"/>
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label><strong>{LANG.name_authour}</strong></label>
-                <input type="text" class="form-control" name="q" value="{SEARCH.q}">
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
-                <a href="{URL}&request=1" class="btn btn-success"><i class="fa fa-plus"></i> {LANG.add_authour}</a>
-                <button type="submit" name="search" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> {GLANG.search}</button>
-            </div>
-        </div>
-    </form>
-</div>
-<!-- END: search -->
-<!-- BEGIN: request -->
-<form method="post">
-    <table class="table table-hover table-striped table-bordered">
-        <caption><strong><em class="fa fa-file-text-o"></em> {CAPTION}</strong></caption>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('[data-toggle="add"]').on('click', function(e) {
+            e.preventDefault();
+            $('html, body').animate({
+                scrollTop: $('#form-holder').offset().top
+            }, 200, function() {
+                $('[name="name_author"]').focus();
+            });
+        });
+    });
+</script>
+<!-- END: add_btn -->
+<div class="table-responsive">
+    <table class="table table-striped table-bordered table-hover">
+        <colgroup>
+            <col class="w100">
+        </colgroup>
+        <thead>
+        <tr>
+            <th style="width: 1%" class="text-center">
+                <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
+            </th>
+            <th style="width: 10%" class="text-nowrap">{LANG.order}</th>
+            <th style="width: 65%" class="text-nowrap">{LANG.name_authour}</th>
+            <th style="width: 15%" class="text-center text-nowrap">{LANG.image_authour}</th>
+            <th style="width: 10%" class="text-center text-nowrap">{LANG.function}</th>
+        </tr>
+        </thead>
         <tbody>
+        <!-- BEGIN: loop -->
         <tr>
-            <td class="text-center">{LANG.name_authour}</td>
-            <td><input class="form-control" name="name_author" type="text" value="{DATA.name_author}"></td>
-        </tr>
-        <tr>
-            <td class="text-center">{LANG.description_authour}</td>
-            <td><textarea class="form-control" name="description">{DATA.description}</textarea></td>
-        </tr>
-        <tr>
-            <td class="text-center">{LANG.bodyhtml_authour}</td>
+            <td class="text-center">
+                <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
+            </td>
+            <td class="text-center">
+                <select id="change_weight_{ROW.id}" onchange="nv_change_authour_weight('{ROW.id}', '{NV_CHECK_SESSION}');" class="form-control input-sm">
+                    <!-- BEGIN: weight -->
+                    <option value="{WEIGHT.w}"{WEIGHT.selected}>{WEIGHT.w}</option>
+                    <!-- END: weight -->
+                </select>
+            </td>
             <td>
-                <textarea class="form-control" name="bodyhtml">{DATA.bodyhtml}</textarea>
+                <strong>{ROW.name_author}</strong>
+            </td>
+            <td class="text-center">
+                <img src="{ROW.image}" width="60" height="60" class="img-thumbnail img__authour">
+            </td>
+            <td class="text-center text-nowrap">
+                <a class="btn btn-sm btn-default" href="{ROW.url_edit}"><i class="fa fa-edit"></i> {GLANG.edit}</a>
+                <a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="nv_delele_authors('{ROW.id}', '{NV_CHECK_SESSION}');"><i class="fa fa-trash"></i> {GLANG.delete}</a>
             </td>
         </tr>
-        <tr>
-            <td class="text-center">{LANG.image_authour}</td>
-            <td>
-                <div class="mb-0">
+        <!-- END: loop -->
+        </tbody>
+    </table>
+</div>
+<div class="form-group form-inline">
+    <div class="form-group">
+        <select class="form-control" id="action-of-content">
+            <option value="delete">{GLANG.delete}</option>
+        </select>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="nv_content_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
+</div>
+<div id="form-holder"></div>
+<!-- BEGIN: error -->
+<div class="alert alert-danger">{ERROR}</div>
+<!-- END: error -->
+<h2><i class="fa fa-th-large" aria-hidden="true"></i> {CAPTION}</h2>
+<p class="text-info"><span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span> {LANG.is_required}</p>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form method="post" action="{FORM_ACTION}" class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="element_name_author">{LANG.name_authour} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
+                <div class="col-sm-18 col-lg-10">
+                    <input type="text" id="element_name_author" name="name_author" value="{DATA.name_author}" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="element_alias">{LANG.alias}</label>
+                <div class="col-sm-18 col-lg-10">
                     <div class="input-group">
-                        <input class="form-control image image_{ROW.id_employee}_1" type="text" name="image" id="image" placeholder="{LANG.select_image}" readonly value="{DATA.image}">
+                        <input type="text" id="element_alias" name="alias" value="{DATA.alias}" class="form-control">
                         <span class="input-group-btn">
-                            <button type="button" name="selectimg" onclick="openImageBrowser()" class="btn btn-info btn__image"><em class="fa fa-folder-open-o"></em></button>
+                            <button class="btn btn-default" type="button" onclick="get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')"><i class="fa fa-retweet"></i></button>
                         </span>
                     </div>
                 </div>
-            </td>
-        </tr>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="2" class="text-center">
-                <a href="{URL}" class="btn btn-default">{LANG.url_cancel}</a>
-                <button type="submit" name="save" class="btn btn-primary">{LANG.action}</button>
-            </td>
-        </tr>
-        </tfoot>
-    </table>
-</form>
-<!-- END: request -->
-<form method="post" id="form__list">
-    <div>
-        <hr>
-        <br>
-        <h2 class="text-center"><strong>{LANG.list_authour}</strong></h2>
-        <p>{LANG.total_db} <span class="btn btn-warning">{TOTAL}</span></p>
-        <table class="table table-bordered table-striped table-hover">
-            <thead class="bg-primary">
-            <tr>
-                <th class="text-center"><input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);"</th>
-                <th class="text-center">{LANG.weight}</th>
-                <th class="text-center">{LANG.name_authour}</th>
-                <th class="text-center">{LANG.description_authour}</th>
-                <th class="text-center">{LANG.image_authour}</th>
-                <th class="text-center">{LANG.function}</th>
-            </thead>
-            <tbody>
-            <!-- BEGIN: loop -->
-            <tr>
-                <td class="text-center">
-                    <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]" />
-                </td>
-                <td class="text-center">{ROW.stt}</td>
-                <td class="text-center">{ROW.name_author}</td>
-                <td class="text-center">{ROW.description}</td>
-                <td class="text-center">
-                    <img src="{ROW.image}" class="img-thumbnail" style="width: 100px;">
-                </td>
-                <td class="text-center">
-                    <a href="{ROW.url_edit}" class="btn btn-sm btn-default"><i class="fa fa-edit"></i>{GLANG.edit}</a>
-                    <a href="{ROW.url_delete}" class="btn btn-sm btn-danger"  onclick="return confirm('{LANG.confirm_delete}')"><i class="fa fa-trash"></i> {GLANG.delete}</a>
-            </tr>
-            <!-- END: loop -->
-            </tbody>
-        </table>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="element_description">{LANG.description}:</label>
+                <div class="col-sm-18 col-lg-10">
+                    <textarea class="form-control" rows="3" name="description" id="element_description">{DATA.description}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="element_bodyhtml">{LANG.bodyhtml_authour}:</label>
+                <div class="col-sm-18 col-lg-10">
+                    <input type="text" id="element_bodyhtml" name="bodyhtml" value="{DATA.bodyhtml}" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="element_image">{LANG.image_authour}:</label>
+                <div class="col-sm-18 col-lg-10">
+                    <div class="input-group">
+                        <input type="text" id="element_image" name="image" value="{DATA.image}" class="form-control">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" id="element_image_pick"><i class="fa fa-file-image-o"></i></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-18 col-sm-offset-6">
+                    <input type="hidden" name="save" value="{NV_CHECK_SESSION}">
+                    <button type="submit" class="btn btn-primary">{GLANG.submit}</button>
+                </div>
+            </div>
+        </form>
     </div>
-    <div class="form-group form-inline">
-        <div class="form-group">
-            <select name="btn_delete" class="form-control">
-                <option value="btn_delete">{GLANG.delete}</option>
-            </select>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="confirmDelete('{LANG.confirm_delete_all}')" >{GLANG.delete}</button>
-    </div>
-</form>
-<!-- BEGIN: generate_page -->
-<div class="text-center">
-    {GENERATE_PAGE}
 </div>
-<!-- END: generate_page -->
-<script>
-    CKEDITOR.replace('bodyhtml');
-</script>
-<script>
-    function openImageBrowser() {
-        $("button[name=selectimg]").click(function () {
-            var area = "image"; //id của thẻ input lưu đường dẫn file
-            var alt = "imagealt"; //id của thẻ input lưu tiêu đề file
-            var path = '{NV_UPLOADS_DIR}/{MODULE_UPLOAD}';
-            var type = "image"; // kiểu định dạng cho phép upload
-            var currentpath = '{NV_UPLOADS_DIR}/{MODULE_UPLOAD}'; //uploads/sample/2020
-            nv_open_browse(script_name + "?" + nv_name_variable + "=upload&popup=1&area=" + area + "&alt=" + alt + "&path=" + path + "&type=" + type + "&currentpath=" + currentpath, "NVImg", 850, 420, "resizable=no,scrollbars=no,toolbar=no,location=no,status=no");
-            return false;
+
+<!-- BEGIN: scroll -->
+<script type="text/javascript">
+    $(window).on('load', function() {
+        $('html, body').animate({
+            scrollTop: $('#form-holder').offset().top
+        }, 200, function() {
+            $('[name="name"]').focus();
         });
-    }
+    });
+</script>
+<!-- END: scroll -->
+
+<!-- BEGIN: getalias -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        var autoAlias = true;
+        $('#element_name_author').on('change', function() {
+            if (autoAlias) {
+                get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}');
+            }
+        });
+        $('#element_alias').on('keyup', function() {
+            if (trim($(this).val()) == '') {
+                autoAlias = true;
+            } else {
+                autoAlias = false;
+            }
+        });
+    });
+</script>
+<!-- END: getalias -->
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#element_image_pick').on('click', function(e) {
+            e.preventDefault();
+            nv_open_browse(script_name + "?" + nv_name_variable + "=upload&popup=1&area=element_image&path={UPLOAD_PATH}&type=image&currentpath={UPLOAD_CURRENT}", "NVImg", 850, 420, "resizable=no,scrollbars=no,toolbar=no,location=no,status=no");
+        });
+    });
 </script>
 <!-- END: main -->

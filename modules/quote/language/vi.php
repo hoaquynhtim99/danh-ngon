@@ -42,6 +42,7 @@ $lang_module['from_day'] = 'Từ ngày';
 $lang_module['to_day'] = 'Đến ngày';
 $lang_module['is_required'] = 'là mục bắt buộc';
 $lang_module['confirm_delete'] = 'Bạn có chắc chắn muốn xóa không?';
+$lang_module['please_select'] = 'Vui lòng chọn';
 
 $lang_module['goto'] = 'Chuyển đến';
 $lang_module['page'] = 'Trang %s';
@@ -78,7 +79,6 @@ $lang_module['filter_order_by'] = 'Sắp xếp theo %s thứ tự';
 
 $lang_module['content'] = 'Thêm danh ngôn';
 $lang_module['content_edit'] = 'Sửa danh ngôn';
-$lang_module['content_delete'] = 'Sửa danh ngôn';
 $lang_module['content_content'] = 'Nội dung';
 $lang_module['content_title'] = 'Quản lý danh ngôn';
 $lang_module['content_error_empty'] = 'Lỗi: Chưa nhập nội dung cho danh ngôn';
@@ -94,6 +94,8 @@ $lang_module['cats_delete'] = 'Xóa danh mục';
 $lang_module['cats_nums'] = 'Số danh ngôn';
 $lang_module['cats_error_exist'] = 'Lỗi: Danh mục này đã có';
 $lang_module['cats_manager'] = 'Quản lý danh mục';
+$lang_module['cats_error_title'] = 'Lỗi: Chưa nhập tên danh mục';
+$lang_module['cats_error_exists'] = 'Lỗi: Tên danh mục này đã có';
 
 $lang_module['main_list'] = 'Danh sách danh ngôn';
 
@@ -119,4 +121,3 @@ $lang_module['error_required_id'] = 'Lỗi: Bạn cần chọn id để xóa';
 $lang_module['confirm_delete_all'] = 'Bạn có chắc chắn muốn xóa những gì đã chọn không?';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';
-$lang_module['add_quote'] = 'Thêm danh ngôn';

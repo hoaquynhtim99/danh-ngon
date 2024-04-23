@@ -31,7 +31,8 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   content mediumtext NOT NULL,
   addtime int(11) unsigned NOT NULL DEFAULT '0',
   updatetime int(11) unsigned NOT NULL DEFAULT '0',
-  status tinyint(1) unsigned NOT NULL DEFAULT '0',
+  keywords varchar(250) NOT NULL DEFAULT '' COMMENT 'Từ khóa',
+  status tinyint(4) NOT NULL DEFAULT '1' COMMENT '0: Dừng, 1 Hoạt động',
   PRIMARY KEY (id),
   KEY catids (catids),
   KEY author_id (author_id),
@@ -51,11 +52,10 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   admin_id int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID người đăng',
   addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
-  status tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT 'Trạng thái hoạt động: 0: Dừng, 1: Hoạt động',
+  weight smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Thứ tự',
   PRIMARY KEY (id),
   KEY addtime (addtime),
-  KEY updatetime (updatetime),
-  KEY status (status)
+  KEY updatetime (updatetime)
 ) ENGINE=InnoDB COMMENT 'Tác giả danh ngôn'";
 
 // # 3. Bảng quản lý danh mục
