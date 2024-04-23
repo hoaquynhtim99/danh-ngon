@@ -28,7 +28,6 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   catids varchar(250) NOT NULL DEFAULT '' COMMENT 'ID Danh mục',
   author_id mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tác giả',
-  alias varchar(190) NOT NULL DEFAULT '' COMMENT 'Liên kết tĩnh không trùng',
   content mediumtext NOT NULL,
   addtime int(11) unsigned NOT NULL DEFAULT '0',
   updatetime int(11) unsigned NOT NULL DEFAULT '0',
