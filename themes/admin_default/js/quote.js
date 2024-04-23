@@ -50,19 +50,6 @@ function nv_delele_cats(id, checksess) {
     }
 }
 
-function confirmDelete(message) {
-    if (confirm(message)) {
-        $.ajax({
-            url: script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=authour',
-            type: "POST",
-            data: $('#form__list').serialize(),
-            success: function (data) {
-                location.reload();
-            }
-        });
-    }
-}
-
 function get_authour_alias(id, checksess) {
     var name_author = strip_tags(document.getElementById('element_name_author').value);
     if (name_author != '') {
@@ -105,5 +92,41 @@ function nv_delele_authors(id, checksess) {
                     alert(nv_is_del_confirm[2]);
                 }
             });
+    }
+}
+
+function nv_content_action(oForm, checkss, msgnocheck) {
+    var fa = oForm['idcheck[]'];
+    var listid = '';
+    if (fa.length) {
+        for (var i = 0; i < fa.length; i++) {
+            if (fa[i].checked) {
+                listid = listid + fa[i].value + ',';
+            }
+        }
+    } else {
+        if (fa.checked) {
+            listid = listid + fa.value + ',';
+        }
+    }
+
+    if (listid != '') {
+        var action = document.getElementById('action-of-content').value;
+        if (action == 'delete_all') {
+            if (confirm(nv_is_del_confirm[0])) {
+                $.post(
+                    script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=authour&nocache=' + new Date().getTime(),
+                    'delete_all=' + checkss + '&listid=' + listid, function(res) {
+                        var r_split = res.split("_");
+                        if (r_split[0] == 'OK') {
+                            location.reload();
+                        } else {
+                            alert(nv_is_del_confirm[2]);
+                        }
+                    });
+            }
+        }
+    } else {
+        alert(msgnocheck);
     }
 }

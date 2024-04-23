@@ -16,58 +16,69 @@
     });
 </script>
 <!-- END: add_btn -->
-<div class="table-responsive">
-    <table class="table table-striped table-bordered table-hover">
-        <colgroup>
-            <col class="w100">
-        </colgroup>
-        <thead>
-        <tr>
-            <th style="width: 1%" class="text-center">
-                <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
-            </th>
-            <th style="width: 10%" class="text-nowrap">{LANG.order}</th>
-            <th style="width: 65%" class="text-nowrap">{LANG.name_authour}</th>
-            <th style="width: 15%" class="text-center text-nowrap">{LANG.image_authour}</th>
-            <th style="width: 10%" class="text-center text-nowrap">{LANG.function}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- BEGIN: loop -->
-        <tr>
-            <td class="text-center">
-                <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
-            </td>
-            <td class="text-center">
-                <select id="change_weight_{ROW.id}" onchange="nv_change_authour_weight('{ROW.id}', '{NV_CHECK_SESSION}');" class="form-control input-sm">
-                    <!-- BEGIN: weight -->
-                    <option value="{WEIGHT.w}"{WEIGHT.selected}>{WEIGHT.w}</option>
-                    <!-- END: weight -->
-                </select>
-            </td>
-            <td>
-                <strong>{ROW.name_author}</strong>
-            </td>
-            <td class="text-center">
-                <img src="{ROW.image}" width="60" height="60" class="img-thumbnail img__authour">
-            </td>
-            <td class="text-center text-nowrap">
-                <a class="btn btn-sm btn-default" href="{ROW.url_edit}"><i class="fa fa-edit"></i> {GLANG.edit}</a>
-                <a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="nv_delele_authors('{ROW.id}', '{NV_CHECK_SESSION}');"><i class="fa fa-trash"></i> {GLANG.delete}</a>
-            </td>
-        </tr>
-        <!-- END: loop -->
-        </tbody>
-    </table>
-</div>
-<div class="form-group form-inline">
-    <div class="form-group">
-        <select class="form-control" id="action-of-content">
-            <option value="delete">{GLANG.delete}</option>
-        </select>
+<form>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover">
+            <colgroup>
+                <col class="w100">
+            </colgroup>
+            <thead>
+            <tr>
+                <th style="width: 1%" class="text-center">
+                    <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
+                </th>
+                <th style="width: 10%" class="text-nowrap">{LANG.order}</th>
+                <th style="width: 65%" class="text-nowrap">{LANG.name_authour}</th>
+                <th style="width: 15%" class="text-center text-nowrap">{LANG.image_authour}</th>
+                <th style="width: 10%" class="text-center text-nowrap">{LANG.function}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- BEGIN: loop -->
+            <tr>
+                <td class="text-center">
+                    <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
+                </td>
+                <td class="text-center">
+                    <select id="change_weight_{ROW.id}" onchange="nv_change_authour_weight('{ROW.id}', '{NV_CHECK_SESSION}');" class="form-control input-sm">
+                        <!-- BEGIN: weight -->
+                        <option value="{WEIGHT.w}"{WEIGHT.selected}>{WEIGHT.w}</option>
+                        <!-- END: weight -->
+                    </select>
+                </td>
+                <td>
+                    <strong>{ROW.name_author}</strong>
+                </td>
+                <td class="text-center">
+                    <img src="{ROW.image}" width="60" height="60" class="img-thumbnail img__authour">
+                </td>
+                <td class="text-center text-nowrap">
+                    <a class="btn btn-sm btn-default" href="{ROW.url_edit}"><i class="fa fa-edit"></i> {GLANG.edit}</a>
+                    <a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="nv_delele_authors('{ROW.id}', '{NV_CHECK_SESSION}');"><i class="fa fa-trash"></i> {GLANG.delete}</a>
+                </td>
+            </tr>
+            <!-- END: loop -->
+            </tbody>
+            <!-- BEGIN: generate_page -->
+            <tfoot>
+            <tr>
+                <td colspan="6" class="text-center">
+                    {GENERATE_PAGE}
+                </td>
+            </tr>
+            </tfoot>
+            <!-- END: generate_page -->
+        </table>
     </div>
-    <button type="button" class="btn btn-primary" onclick="nv_content_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
-</div>
+    <div class="form-group form-inline">
+        <div class="form-group">
+            <select class="form-control" id="action-of-content">
+                <option value="delete_all">{GLANG.delete}</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="nv_content_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
+    </div>
+</form>
 <div id="form-holder"></div>
 <!-- BEGIN: error -->
 <div class="alert alert-danger">{ERROR}</div>

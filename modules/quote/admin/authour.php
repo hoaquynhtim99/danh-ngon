@@ -14,6 +14,8 @@ if (!defined('NV_IS_FILE_ADMIN')) {
 }
 
 $page_title = $nv_Lang->getModule('authour_admin');
+$per_page = 5;
+$page = $nv_Request->get_absint('page', 'get', 1);
 $array = $error = [];
 $base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
 $is_submit_form = $is_edit = false;
@@ -127,6 +129,31 @@ if (!empty($id)) {
     $form_action = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
 }
 
+// Xóa nhiều
+if ($nv_Request->get_title('delete_all', 'post', '') === NV_CHECK_SESSION) {
+    $id = $nv_Request->get_int('id', 'post', 0);
+    $listid = $nv_Request->get_title('listid', 'post', '');
+    $listid = $listid . ',' . $id;
+    $listid = array_filter(array_unique(array_map('intval', explode(',', $listid))));
+
+    foreach ($listid as $id) {
+        // Kiểm tra tồn tại
+        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id=" . $id;
+        $array = $db->query($sql)->fetch();
+        if (!empty($array)) {
+            nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_CONTENT', json_encode($array), $admin_info['admin_id']);
+
+            // Xóa
+            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id =" . $id;
+            $db->query($sql);
+        }
+    }
+
+    $nv_Cache->delMod($module_name);
+    nv_htmlOutput("OK");
+}
+
+
 if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
     $is_submit_form = true;
     $array['name_author'] = $nv_Request->get_title('name_author', 'post', '');
@@ -214,6 +241,15 @@ if (!empty($array['image']) and nv_is_file(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/
     $currentpath = substr(dirname($array['image']), strlen(NV_BASE_SITEURL));
 }
 
+$db->sqlreset()->select('COUNT(*)')->from(NV_PREFIXLANG . '_' . $module_data . '_authors');
+$total = $db->query($db->sql())->fetchColumn();
+
+$db->select('*')->order('id ASC')->limit($per_page)->offset(($page - 1) * $per_page);
+$result = $db->query($db->sql());
+while ($row = $result->fetch()) {
+    $array_cats[] = $row;
+}
+
 $xtpl = new XTemplate('authour.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
 $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
@@ -224,28 +260,33 @@ $xtpl->assign('DATA', $array);
 $xtpl->assign('UPLOAD_CURRENT', $currentpath);
 $xtpl->assign('UPLOAD_PATH', NV_UPLOADS_DIR . '/' . $module_upload);
 
-$sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors ORDER BY weight ASC";
-$array_cats = $db->query($sql)->fetchAll();
-$num = sizeof($array_cats);
+if (!empty($array_cats)) {
+    foreach ($array_cats as $row) {
+        for ($i = 1; $i <= $total; ++$i) {
+            $xtpl->assign('WEIGHT', [
+                'w' => $i,
+                'selected' => ($i == $row['weight']) ? ' selected="selected"' : ''
+            ]);
 
-foreach ($array_cats as $row) {
-    for ($i = 1; $i <= $num; ++$i) {
-        $xtpl->assign('WEIGHT', [
-            'w' => $i,
-            'selected' => ($i == $row['weight']) ? ' selected="selected"' : ''
-        ]);
+            $xtpl->parse('main.loop.weight');
+        }
+        if (empty($row['image'])) {
+            $row['image'] = NV_STATIC_URL . 'themes/default/images/users/no_avatar.png';
+        } else {
+            $row['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . basename($row['image']);
+        }
+        $row['url_edit'] = $base_url . '&id=' . $row['id'];
+        $xtpl->assign('ROW', $row);
+        $xtpl->parse('main.loop');
+    }
 
-        $xtpl->parse('main.loop.weight');
+    $gerate_page = nv_generate_page($base_url, $total, $per_page, $page);
+    if (!empty($gerate_page)) {
+        $xtpl->assign('GENERATE_PAGE', $gerate_page);
+        $xtpl->parse('main.generate_page');
     }
-    if (empty($row['image'])) {
-        $row['image'] = NV_STATIC_URL . 'themes/default/images/users/no_avatar.png';
-    } else {
-        $row['image'] = NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/' . basename($row['image']);
-    }
-    $row['url_edit'] = $base_url . '&id=' . $row['id'];
-    $xtpl->assign('ROW', $row);
-    $xtpl->parse('main.loop');
 }
+
 
 // Hiển thị nút lấy alias
 if (empty($array['alias'])) {
