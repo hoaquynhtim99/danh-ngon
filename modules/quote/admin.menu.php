@@ -20,3 +20,4 @@ $allow_func = [
 ];
 
 $submenu['cats'] = $nv_Lang->getModule('cats_manager');
+$submenu['authour'] = $nv_Lang->getModule('authour_admin');
