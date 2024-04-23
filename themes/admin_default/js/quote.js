@@ -50,8 +50,8 @@ function nv_delele_cats(id, checksess) {
     }
 }
 
-function confirmDelete() {
-    if (confirm('Bạn có chắc chắn muốn xóa không các danh sách đã ch?')) {
+function confirmDelete(message) {
+    if (confirm(message)) {
         $.ajax({
             url: script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=authour',
             type: "POST",

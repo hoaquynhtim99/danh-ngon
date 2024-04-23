@@ -34,6 +34,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   status tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (id),
   KEY catids (catids),
+  KEY author_id (author_id),
   KEY addtime (addtime),
   KEY updatetime (updatetime),
   KEY status (status)

@@ -5,9 +5,32 @@
     {ERROR}
 </div>
 <!-- END: error -->
+<!-- BEGIN: search -->
+<div class="well row">
+    <form action="{URL}" method="GET">
+        <input type="hidden" name="{NV_LANG_VARIABLE}" value="{NV_LANG_DATA}"/>
+        <input type="hidden" name="{NV_NAME_VARIABLE}" value="{MODULE_NAME}"/>
+        <input type="hidden" name="{NV_OP_VARIABLE}" value="{OP}"/>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label><strong>{LANG.name_authour}</strong></label>
+                <input type="text" class="form-control" name="q" value="{SEARCH.q}">
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
+                <a href="{URL}&request=1" class="btn btn-success"><i class="fa fa-plus"></i> {LANG.add_authour}</a>
+                <button type="submit" name="search" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> {GLANG.search}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- END: search -->
+<!-- BEGIN: request -->
 <form method="post">
     <table class="table table-hover table-striped table-bordered">
-        <caption><strong><em class="fa fa-file-text-o"></em> {LANG.add_quote}</strong></caption>
+        <caption><strong><em class="fa fa-file-text-o"></em> {CAPTION}</strong></caption>
         <tbody>
         <tr>
             <td class="text-center">{LANG.name_authour}</td>
@@ -47,6 +70,7 @@
         </tfoot>
     </table>
 </form>
+<!-- END: request -->
 <form method="post" id="form__list">
     <div>
         <hr>
@@ -54,7 +78,7 @@
         <h2 class="text-center"><strong>{LANG.list_authour}</strong></h2>
         <p>{LANG.total_db} <span class="btn btn-warning">{TOTAL}</span></p>
         <table class="table table-bordered table-striped table-hover">
-            <thead>
+            <thead class="bg-primary">
             <tr>
                 <th class="text-center"><input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);"</th>
                 <th class="text-center">{LANG.weight}</th>
@@ -81,15 +105,15 @@
             </tr>
             <!-- END: loop -->
             </tbody>
-            <tfoot>
-            <tr>
-                <td colspan="5">
-                    <input type="hidden" name="btn_delete" value="btn_delete">
-                    <button type="button" class="btn btn-primary" onclick="confirmDelete()" >{GLANG.delete}</button>
-                </td>
-            </tr>
-            </tfoot>
         </table>
+    </div>
+    <div class="form-group form-inline">
+        <div class="form-group">
+            <select name="btn_delete" class="form-control">
+                <option value="btn_delete">{GLANG.delete}</option>
+            </select>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="confirmDelete('{LANG.confirm_delete_all}')" >{GLANG.delete}</button>
     </div>
 </form>
 <!-- BEGIN: generate_page -->

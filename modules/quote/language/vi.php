@@ -100,6 +100,7 @@ $lang_module['main_list'] = 'Danh sách danh ngôn';
 $lang_module['authour_admin'] = 'Quản lý Tác giả';
 $lang_module['list_authour'] = 'Danh sách tác giả';
 $lang_module['add_authour'] = 'Thêm tác giả';
+$lang_module['edit_authour'] = 'Sửa tác giả';
 $lang_module['cats_id'] = 'Chọn danh mục';
 $lang_module['name_authour'] = 'Tên tác giả';
 $lang_module['description_authour'] = 'Mô tả ngắn gọn về tác giả';
@@ -115,6 +116,7 @@ $lang_module['description_authour'] = 'Mô tả ngắn gọn';
 $lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
 $lang_module['image_authour'] = 'Ảnh đại diện';
 $lang_module['error_required_id'] = 'Lỗi: Bạn cần chọn id để xóa';
+$lang_module['confirm_delete_all'] = 'Bạn có chắc chắn muốn xóa những gì đã chọn không?';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';
 $lang_module['add_quote'] = 'Thêm danh ngôn';
