@@ -30,7 +30,7 @@
                         <!-- END: author -->
                     </select>
                 </div>
-                <button class="btn btn-success" type="button"></button>
+                <button class="btn btn-success" type="button" data-toggle="modal" data-target="#add_author">{LANG.add_authour}</button>
             </div>
             <div class="form-group">
                 <label class="col-sm-6 control-label" for="element_content">{LANG.content_content} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>

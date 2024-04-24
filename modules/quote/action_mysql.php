@@ -26,9 +26,10 @@ $sql_create_module = $sql_drop_module;
 // # 1. Bảng quản lý danh ngôn
 $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . " (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
-  catids varchar(250) NOT NULL DEFAULT '' COMMENT 'ID Danh mục',
+  catids mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID Danh mục',
   author_id mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tác giả',
-  content mediumtext NOT NULL,
+  tagids mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tag có thể 1 danh ngôn nhiêu tag tag1,tag2,...',
+  content mediumtext NOT NULL DEFAULT '' COMMENT 'Nội dung',
   addtime int(11) unsigned NOT NULL DEFAULT '0',
   updatetime int(11) unsigned NOT NULL DEFAULT '0',
   keywords varchar(250) NOT NULL DEFAULT '' COMMENT 'Từ khóa',
@@ -75,3 +76,21 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   KEY status (status),
   UNIQUE KEY title (title)
 ) ENGINE=InnoDB COMMENT 'Danh mục'";
+
+// Quản lý tags
+$sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_tags (
+  id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
+  title varchar(250) NOT NULL DEFAULT '' COMMENT 'Tên tag',
+  alias varchar(250) NOT NULL DEFAULT '' COMMENT 'Liên kết tĩnh',
+  description text NOT NULL DEFAULT '' COMMENT 'Mô tả',
+  keywords text NOT NULL DEFAULT '' COMMENT 'Từ khóa',
+  image varchar(255) NOT NULL DEFAULT '' COMMENT 'Ảnh mô tả',
+  addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
+  updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
+  PRIMARY KEY (id),
+  KEY addtime (addtime),
+  KEY updatetime (updatetime), 
+  KEY alias (alias),
+  UNIQUE KEY title (title)
+) ENGINE=InnoDB COMMENT 'Tags'";
+
