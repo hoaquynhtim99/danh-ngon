@@ -61,7 +61,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
 // # 3. Bảng quản lý danh mục
 $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_cats (
   id smallint(4) unsigned NOT NULL AUTO_INCREMENT,
-  nums int(11) unsigned NOT NULL DEFAULT '0',
+  nums int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Số lượng',
   title varchar(190) NOT NULL DEFAULT '' COMMENT 'Tiêu đề',
   description text NOT NULL COMMENT 'Note',
   addtime int(11) unsigned NOT NULL DEFAULT '0',
@@ -75,3 +75,30 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   KEY status (status),
   UNIQUE KEY title (title)
 ) ENGINE=InnoDB COMMENT 'Danh mục'";
+
+// Thêm dữ liệu mẫu vào bảng quản lý danh mục
+$sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_cats (nums, title, description, addtime, updatetime, weight, status) VALUES
+(0, 'Danh ngôn Việt Nam', 'Danh ngôn Việt Nam', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 1, 1),
+(0, 'Danh ngôn nước ngoài', 'Danh ngôn nước ngoài', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 2, 1)";
+
+// Thêm dữ liệu mẫu vào bảng quản lý tác giả
+$sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_authors (name_author, alias, description, bodyhtml, image, admin_id, addtime, updatetime, weight) VALUES
+('Võ Nguyên Giáp', 'vo-nguyen-giap', 'Võ Nguyên Giáp', 'Võ Nguyên Giáp', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 1),
+('Hồ Chí Minh', 'ho-chi-minh', 'Hồ Chí Minh', 'Hồ Chí Minh', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 2),
+('Albert Einstein', 'albert-einstein', 'Albert Einstein', 'Albert Einstein', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 3),
+('Isaac Newton', 'isaac-newton', 'Isaac Newton', 'Isaac Newton', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 4),
+('Bill Gates', 'bill-gates', 'Bill Gates', 'Bill Gates', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 5),
+('Steve Jobs', 'steve-jobs', 'Steve Jobs', 'Steve Jobs', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 6),
+('Mark Zuckerberg', 'mark-zuckerberg', 'Mark Zuckerberg', 'Mark Zuckerberg', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 7),
+('Warren Buffett', 'warren-buffett', 'Warren Buffett', 'Warren Buffett', '', 0, " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 8)";
+
+// Thêm dữ liệu mẫu vào bảng quản lý danh ngôn
+$sql_create_module[] = "INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . " (catids, author_id, content, addtime, updatetime, keywords, status) VALUES
+('1', 1, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 2, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 3, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 4, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 5, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 6, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 7, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1),
+('1', 8, 'Không có gì là không thể', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 'Không có gì là không thể', 1)";

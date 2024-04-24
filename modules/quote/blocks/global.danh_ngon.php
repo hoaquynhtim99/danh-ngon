@@ -1,58 +1,65 @@
 <?php
 
 /**
- * @Project NUKEVIET 3.0
- * @Author VINADES.,JSC (contact@vinades.vn)
- * @Copyright (C) 2010 VINADES., JSC. All rights reserved
- * @Createdate 3/9/2010 23:25
+ * NukeViet Content Management System
+ * @version 4.x
+ * @author VINADES.,JSC <contact@vinades.vn>
+ * @copyright (C) 2009-2023 VINADES.,JSC. All rights reserved
+ * @license GNU/GPL version 2 or any later version
+ * @see https://github.com/nukeviet The NukeViet CMS GitHub project
  */
 
-if ( ! defined( 'NV_MAINFILE' ) ) die( 'Stop!!!' );
+if (!defined('NV_MAINFILE')) {
+    exit('Stop!!!');
+}
 
-if ( ! nv_function_exists( 'nv_danh_ngon' ) )
-{
-    function nv_danh_ngon ( $block_config )
+if (!nv_function_exists('nv_danhngon')) {
+
+    function nv_danhngon($block_config)
     {
-        global $module_info, $lang_module, $site_mods, $db;
-
+        global $site_mods, $module_info, $module_data, $db, $nv_Cache, $global_config;
         $module = $block_config['module'];
-        $data = $site_mods[$module]['module_data'];
 
-        $sql = "SELECT `content` FROM `" . NV_PREFIXLANG . "_" . $data . "` WHERE `status`=1 ORDER BY RAND() LIMIT 1";
-        $result = $db->sql_query( $sql );
-        $numrow = $db->sql_numrows( $result );
+        $db->sqlreset()
+            ->select('author_id, content')
+            ->from(NV_PREFIXLANG . '_' . $module_data)
+            ->where('status = 1')
+            ->order('RAND()')
+            ->limit(1);
+        $sth = $db->prepare($db->sql());
+        $sth->execute();
+        $list = $sth->fetch();
 
-        if ( ! empty( $numrow ) )
-        {
-            if ( file_exists( NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/quote/block_rand_tag.tpl" ) )
-            {
-                $block_theme = $module_info['template'];
-            }
-            else
-            {
-                $block_theme = "default";
-            }
-            $xtpl = new XTemplate( "block_rand_tag.tpl", NV_ROOTDIR . "/themes/" . $block_theme . "/modules/quote" );
-
-            list( $ct ) = $db->sql_fetchrow( $result );
-            $xtpl->assign( 'CONTENT', $ct );
-
-            $xtpl->parse( 'main' );
-            return $xtpl->text( 'main' );
+        if (!empty($list['author_id'])) {
+            $db->sqlreset()
+                ->select('name_author')
+                ->from(NV_PREFIXLANG . '_' . $module_data . '_authors')
+                ->where('id = ' . $list['author_id']);
+            $sth = $db->prepare($db->sql());
+            $sth->execute();
+            $author = $sth->fetch();
         }
+
+        if (!empty($list)) {
+            $block_theme = get_tpl_dir($global_config['module_theme'], 'default', '/modules/quote/block_danhngon.tpl');
+            $xtpl = new XTemplate('block_danhngon.tpl', NV_ROOTDIR . '/themes/' . $block_theme . '/modules/quote');
+            $xtpl->assign('TEMPLATE', $block_theme);
+            $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
+            $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
+
+            $xtpl->assign('CONTENT',[
+                'content' => $list['content'],
+                'author' => $author['name_author']
+            ]);
+
+            $xtpl->parse('main');
+            return $xtpl->text('main');
+        }
+
     }
+
 }
 
-if ( defined( 'NV_SYSTEM' ) )
-{
-    global $site_mods;
-
-    $module = $block_config['module'];
-
-    if ( isset( $site_mods[$module] ) )
-    {
-        $content = nv_danh_ngon( $block_config );
-    }
+if (defined('NV_SYSTEM')) {
+    $content = nv_danhngon($block_config);
 }
-
-?>

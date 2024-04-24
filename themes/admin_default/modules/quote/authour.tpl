@@ -76,7 +76,7 @@
                 <option value="delete_all">{GLANG.delete}</option>
             </select>
         </div>
-        <button type="button" class="btn btn-primary" onclick="nv_content_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
+        <button type="button" class="btn btn-primary" onclick="nv_authour_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
     </div>
 </form>
 <div id="form-holder"></div>

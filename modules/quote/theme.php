@@ -122,3 +122,18 @@ function nv_main_theme($array, $generate_page)
     $xtpl->parse('main');
     return $xtpl->text('main');
 }
+
+function nv_quote_main()
+{
+    global $global_config, $lang_global, $lang_module, $module_name, $module_file, $module_info, $my_head;
+
+    $xtpl = new XTemplate("main.tpl", NV_ROOTDIR . "/themes/" . $module_info['template'] . "/modules/" . $module_file);
+    $xtpl->assign('NV_BASE_SITEURL', NV_BASE_SITEURL);
+    $xtpl->assign('LANG', $lang_module);
+    $xtpl->assign('GLANG', $lang_global);
+
+
+
+    $xtpl->parse('main');
+    return $xtpl->text('main');
+}

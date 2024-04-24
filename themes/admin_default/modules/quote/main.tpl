@@ -71,7 +71,7 @@ $(document).ready(function() {
                         <a href="{URL_ORDER_ADDTIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
                     </th>
                     <th style="width: 15%" class="text-nowrap">
-                        <a href="{URL_ORDER_EDITTIME}">{ICON_ORDER_EDIT_TIME} {LANG.edittime}</a>
+                        <a href="{URL_ORDER_UPDATETIME}">{ICON_ORDER_EDIT_TIME} {LANG.edittime}</a>
                     </th>
                     <th style="width: 15%" class="text-nowrap text-center">{LANG.status}</th>
                     <th style="width: 14%" class="text-nowrap text-center">{LANG.function}</th>
@@ -83,7 +83,7 @@ $(document).ready(function() {
                     <td class="text-center">
                         <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
                     </td>
-                    <td><a target="_blank" href="{ROW.link}"><strong>{ROW.content}</strong></a></td>
+                    <td><strong>{ROW.content}</strong></td>
                     <td class="text-nowrap">{ROW.addtime}</td>
                     <td class="text-nowrap">{ROW.updatetime}</td>
                     <td class="text-center">

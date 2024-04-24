@@ -44,13 +44,13 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
 
     foreach ($listid as $id) {
         // Kiểm tra tồn tại
-        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $id;
+        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id = " . $id;
         $array = $db->query($sql)->fetch();
         if (!empty($array)) {
             nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_CONTENT', json_encode($array), $admin_info['admin_id']);
 
             // Xóa
-            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id=" . $id;
+            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id = " . $id;
             $db->query($sql);
         }
     }
@@ -90,9 +90,8 @@ if (!empty($array_search['q'])) {
     $base_url .= '&amp;q=' . urlencode($array_search['q']);
     $dblikekey = $db->dblikeescape($array_search['q']);
     $where[] = "(
-        title LIKE '%" . $dblikekey . "%' OR
-        keywords LIKE '%" . $dblikekey . "%' OR
-        description LIKE '%" . $dblikekey . "%'
+        content LIKE '%" . $dblikekey . "%' OR
+        keywords LIKE '%" . $dblikekey . "%'
     )";
 }
 if (!empty($array_search['from'])) {

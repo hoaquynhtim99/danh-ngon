@@ -22,6 +22,7 @@ $is_submit_form = $is_edit = false;
 $currentpath = NV_UPLOADS_DIR . '/' . $module_upload;
 $id = $nv_Request->get_absint('id', 'get', 0);
 
+// Alias
 if ($nv_Request->get_title('changealias', 'post', '') === NV_CHECK_SESSION) {
     $name_author = $nv_Request->get_title('name_author', 'post', '');
     $id = $nv_Request->get_absint('id', 'post', 0);
@@ -80,6 +81,7 @@ if ($nv_Request->get_title('changeweight', 'post', '') === NV_CHECK_SESSION) {
     nv_htmlOutput('OK_' . $id);
 }
 
+// Xóa bản ghi
 if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
     $id = $nv_Request->get_absint('id', 'post', 0);
 
@@ -89,13 +91,21 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
     if (empty($array)) {
         nv_htmlOutput('NO_' . $id);
     }
-
     // Lấy hết ID chủ đề con và ID chính nó
 
     $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id = " . $id;
     $db->query($sql);
 
+    // Cập nhật thứ tự
+    $sql = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors ORDER BY weight ASC";
+    $result = $db->query($sql);
+    $weight = 0;
 
+    while ($row = $result->fetch()) {
+        ++$weight;
+        $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_authors SET weight=" . $weight . " WHERE id=" . $row['id'];
+        $db->query($sql);
+    }
 
     nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_AUTHOUR', json_encode($array), $admin_info['admin_id']);
     $nv_Cache->delMod($module_name);
@@ -146,14 +156,24 @@ if ($nv_Request->get_title('delete_all', 'post', '') === NV_CHECK_SESSION) {
             // Xóa
             $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id =" . $id;
             $db->query($sql);
+
+            $sql = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors ORDER BY weight ASC";
+            $result = $db->query($sql);
+            $weight = 0;
+
+            while ($row = $result->fetch()) {
+                ++$weight;
+                $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_authors SET weight=" . $weight . " WHERE id=" . $row['id'];
+                $db->query($sql);
+            }
         }
     }
-
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_AUTHOUR_ALL', json_encode($array), $admin_info['admin_id']);
     $nv_Cache->delMod($module_name);
     nv_htmlOutput("OK");
 }
 
-
+// Thêm với sửa
 if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
     $is_submit_form = true;
     $array['name_author'] = $nv_Request->get_title('name_author', 'post', '');
@@ -171,10 +191,11 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
         $array['image'] = '';
     }
 
+    // Kiểm tra trùng
     $is_exists = false;
-    $sql = "SELECT id FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE alias = :alias" . ($id ? ' AND id != ' . $id : '');
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE name_author = :name_author" . ($id ? ' AND id != ' . $id : '');
     $sth = $db->prepare($sql);
-    $sth->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
+    $sth->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
     $sth->execute();
     if ($sth->fetchColumn()) {
         $is_exists = true;
@@ -244,7 +265,7 @@ if (!empty($array['image']) and nv_is_file(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/
 $db->sqlreset()->select('COUNT(*)')->from(NV_PREFIXLANG . '_' . $module_data . '_authors');
 $total = $db->query($db->sql())->fetchColumn();
 
-$db->select('*')->order('id ASC')->limit($per_page)->offset(($page - 1) * $per_page);
+$db->select('*')->order('weight ASC')->limit($per_page)->offset(($page - 1) * $per_page);
 $result = $db->query($db->sql());
 while ($row = $result->fetch()) {
     $array_cats[] = $row;
