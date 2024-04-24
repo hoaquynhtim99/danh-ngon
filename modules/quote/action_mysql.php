@@ -51,6 +51,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   description text NOT NULL COMMENT 'Mô tả ngắn gọn',
   bodyhtml longtext NOT NULL COMMENT 'Chi tiết',
   image varchar(255) NOT NULL DEFAULT '' COMMENT 'Ảnh mô tả',
+  is_thumb tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0 là không có ảnh, 1 ảnh asset, 2 ảnh upload 3 ảnh remote',
   admin_id int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID người đăng',
   addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
@@ -94,4 +95,3 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   KEY alias (alias),
   UNIQUE KEY title (title)
 ) ENGINE=InnoDB COMMENT 'Tags'";
-

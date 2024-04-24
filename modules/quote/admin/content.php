@@ -124,6 +124,32 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
     }
 }
 
+if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
+    $array['name_author'] = $nv_Request->get_title('name_author', 'post', '');
+
+    if (empty($array['name_author'])) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('author_error_empty')
+        ];
+        nv_jsonOutput($res);
+    }
+
+    $sql = "SELECT MAX(weight) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors";
+    $weight = intval($db->query($sql)->fetchColumn()) + 1;
+
+    $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors (name_author, weight) VALUES (:name_author, ". $weight .")";
+    $sth = $db->prepare($sql);
+    $sth->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
+    $sth->execute();
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Author_', ' ', $admin_info['admin_id']);
+
+    $res = [
+        'res' => 'success',
+        'mess' => $nv_Lang->getModule('author_add_success')
+    ];
+    nv_jsonOutput($res);
+}
 
 $xtpl = new XTemplate('content.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);

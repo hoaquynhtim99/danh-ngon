@@ -30,7 +30,9 @@
                         <!-- END: author -->
                     </select>
                 </div>
-                <button class="btn btn-success" type="button" data-toggle="modal" data-target="#add_author">{LANG.add_authour}</button>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAuthorModal">
+                    {LANG.add_authour}
+                </button>
             </div>
             <div class="form-group">
                 <label class="col-sm-6 control-label" for="element_content">{LANG.content_content} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
@@ -55,14 +57,55 @@
                     <button type="submit" class="btn btn-primary">{GLANG.submit}</button>
                     <!-- END: btn_edit -->
                 </div>
-
             </div>
         </form>
     </div>
 </div>
+<div class="modal fade" id="addAuthorModal" tabindex="-1" role="dialog" aria-labelledby="addAuthorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAuthorModalLabel">{LANG.add_authour}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="addAuthorForm">
+                    <div class="form-group">
+                        <label>{LANG.name_authour}</label>
+                        <input type="text" class="form-control" id="authorName" name="name_author" required>
+                    </div>
+                    <input type="hidden" name="add_author" value="{NV_CHECK_SESSION}">
+                    <button type="button" class="btn btn-primary" id="submitAuthorBtn">{GLANG.submit}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     $(document).ready(function() {
         $('select').select2();
+    });
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#submitAuthorBtn').click(function() {
+            var $form = $('#addAuthorForm');
+
+            $.ajax({
+                url: location.href,
+                type: 'POST',
+                data: $form.serialize(),
+                success: function(response) {
+                    $('#addAuthorModal').modal('hide');
+                    location.reload();
+                }
+            });
+        });
     });
 </script>
 <!-- END: main -->
