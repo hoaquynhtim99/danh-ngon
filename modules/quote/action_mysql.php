@@ -37,6 +37,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   PRIMARY KEY (id),
   KEY catids (catids),
   KEY author_id (author_id),
+  KEY tagids (tagids),
   KEY addtime (addtime),
   KEY updatetime (updatetime),
   KEY status (status)
