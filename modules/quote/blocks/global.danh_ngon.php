@@ -18,7 +18,11 @@ if (!nv_function_exists('nv_danhngon')) {
     function nv_danhngon($block_config)
     {
         global $site_mods, $module_info, $module_data, $db, $nv_Cache, $global_config;
+
         $module = $block_config['module'];
+        $module_data = $site_mods[$module]['module_data'];
+        $list = [];
+        $author = [];
 
         $db->sqlreset()
             ->select('author_id, content')
@@ -49,7 +53,7 @@ if (!nv_function_exists('nv_danhngon')) {
 
             $xtpl->assign('CONTENT',[
                 'content' => $list['content'],
-                'author' => $author['name_author']
+                'author' => $author['name_author'] ?? '',
             ]);
 
             $xtpl->parse('main');

@@ -1,4 +1,6 @@
 <!-- BEGIN: main -->
+<link rel="stylesheet" href="{ASSETS_STATIC_URL}/js/select2/select2.min.css">
+<script src="{ASSETS_STATIC_URL}/js/select2/select2.min.js"></script>
 <!-- BEGIN: error -->
 <div class="alert alert-danger">{ERROR}</div>
 <!-- END: error -->
@@ -28,6 +30,7 @@
                         <!-- END: author -->
                     </select>
                 </div>
+                <button class="btn btn-success" type="button"></button>
             </div>
             <div class="form-group">
                 <label class="col-sm-6 control-label" for="element_content">{LANG.content_content} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
@@ -44,10 +47,22 @@
             <div class="row">
                 <div class="col-sm-18 col-sm-offset-6">
                     <input type="hidden" name="save" value="{NV_CHECK_SESSION}">
+                    <!-- BEGIN: btn_add -->
+                    <button type="submit" class="btn btn-primary" name="add_return">{LANG.add_and_return}</button>
+                    <button type="submit" class="btn btn-primary" name="add_again">{LANG.add_again}</button>
+                    <!-- END: btn_add -->
+                    <!-- BEGIN: btn_edit -->
                     <button type="submit" class="btn btn-primary">{GLANG.submit}</button>
+                    <!-- END: btn_edit -->
                 </div>
+
             </div>
         </form>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('select').select2();
+    });
+</script>
 <!-- END: main -->

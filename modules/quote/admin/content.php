@@ -69,15 +69,6 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
         $error[] = $nv_Lang->getModule('content_error_empty');
     }
 
-    if ($array['catids'] <= 0) {
-        $error[] = $nv_Lang->getModule('error_required_catid');
-    }
-
-    if ($array['author_id'] <= 0) {
-        $error[] = $nv_Lang->getModule('error_required_name_author');
-    }
-
-
     if (empty($error)) {
         if (!$id) {
             $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "
@@ -94,7 +85,14 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
             if (!empty($new_id)) {
                 $nv_Cache->delMod($module_name);
                 nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Content', 'ID: ' . $new_id, $admin_info['userid']);
-                nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name);
+
+                // Cho phép tùy chỉnh để thêm tiếp hay quay lại
+                if ($nv_Request->isset_request('add_again', 'post')) {
+                    nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+                } elseif ($nv_Request->isset_request('add_return', 'post')) {
+                    nv_redirect_location(NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name);
+                }
+
             } else {
                 $error[] = $nv_Lang->getModule('errorsave');
             }
@@ -133,6 +131,12 @@ $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
 $xtpl->assign('CAPTION', $caption);
 $xtpl->assign('FORM_ACTION', $form_action);
 $xtpl->assign('DATA', $array);
+
+if (!$is_edit) {
+    $xtpl->parse('main.btn_add');
+} else {
+    $xtpl->parse('main.btn_edit');
+}
 
 if (!empty($array_catids)) {
     foreach ($array_catids as $catid => $title) {

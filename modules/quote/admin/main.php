@@ -13,6 +13,7 @@ if (!defined('NV_IS_FILE_ADMIN')) {
     exit('Stop!!!');
 }
 
+$page_title = $nv_Lang->getModule('main');
 // Thay đổi hoạt động
 if ($nv_Request->get_title('changestatus', 'post', '') === NV_CHECK_SESSION) {
     $id = $nv_Request->get_int('id', 'post', 0);

@@ -20,6 +20,9 @@ $lang_translator['info'] = '';
 $lang_translator['langtype'] = 'lang_module';
 
 $lang_module['add'] = 'Thêm';
+$lang_module['add_and_return'] = 'Thêm và quay lại';
+$lang_module['add_again'] ='Thêm và thêm tiếp';
+$lang_module['main'] = 'Danh sách danh ngôn';
 $lang_module['title'] = 'Tiêu đề';
 $lang_module['alias'] = 'Liên kết tĩnh';
 $lang_module['errorsave'] = 'Vì một lý do nào đó mà dữ liệu không thể lưu lại được';
