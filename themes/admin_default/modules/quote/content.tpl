@@ -119,19 +119,22 @@
     $(document).ready(function() {
         $('#submitAuthorBtn').click(function() {
             var $form = $('#addAuthorForm');
-
             $.ajax({
                 url: location.href,
                 type: 'POST',
                 data: $form.serialize(),
-                success: function(response) {
+            }).done(function(response) {
+                if (response['res'] == 'success') {
                     $('#addAuthorModal').modal('hide');
                     location.reload();
+                } else {
+                    alert(response['mess']);
                 }
-            });
+            })
         });
     });
 </script>
+
 <!-- BEGIN: getalias -->
 <script type="text/javascript">
     $(document).ready(function() {

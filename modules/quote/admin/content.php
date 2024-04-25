@@ -155,7 +155,7 @@ if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
     if (empty($array['name_author'])) {
         $res = [
             'res' => 'error',
-            'mess' => $nv_Lang->getModule('author_error_empty')
+            'mess' => $nv_Lang->getModule('error_required_name_author')
         ];
         nv_jsonOutput($res);
     }
