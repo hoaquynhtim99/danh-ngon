@@ -137,6 +137,30 @@ if (!empty($array_order['field']) and !empty($array_order['value'])) {
 }
 $db->select('*')->order($order)->limit($per_page)->offset(($page - 1) * $per_page);
 $result = $db->query($db->sql());
+$list = [];
+$catIDs = [];
+$author_ids = [];
+while ($row = $result->fetch()) {
+    $list[] = $row;
+    $catIDs[] = $row['catids'];
+    $author_ids[] = $row['author_id'];
+}
+
+if (!empty($catIDs)) {
+    $db->sqlreset()->select('id, title')->from(NV_PREFIXLANG . '_' . $module_data . '_cats')->where('id IN (' . implode(',', $catIDs) . ')');
+    $result = $db->query($db->sql());
+    while ($row = $result->fetch()) {
+        $array_catids[$row['id']] = $row['title'];
+    }
+}
+if (!empty($author_ids)) {
+    $db->sqlreset()->select('id, name_author')->from(NV_PREFIXLANG . '_' . $module_data . '_authors')->where('id IN (' . implode(',', $author_ids) . ')');
+    $result = $db->query($db->sql());
+    while ($row = $result->fetch()) {
+        $array_authors[$row['id']] = $row['name_author'];
+    }
+}
+
 
 $xtpl = new XTemplate('main.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
@@ -153,17 +177,13 @@ $array_search['to'] = empty($array_search['to']) ? '' : nv_date('d-m-Y', $array_
 
 $xtpl->assign('SEARCH', $array_search);
 
-while ($row = $result->fetch()) {
-    if (!empty($global_array_cats[$row['catids']]['status'])) {
-        $row['link'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_cats[$row['catid']]['alias'] . '/' . $row['alias'] . $global_config['rewrite_exturl'];
-    } else {
-        $row['link'] = '';
-    }
+foreach ($list as $row) {
+    $row['name_cat'] = isset($array_catids[$row['catids']]) ? $array_catids[$row['catids']] : '';
+    $row['name_author'] = isset($array_authors[$row['author_id']]) ? $array_authors[$row['author_id']] : '';
     $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=content&amp;id=' . $row['id'];
     $row['status_render'] = $row['status'] ? ' checked="checked"' : '';
     $row['addtime'] = nv_date('d/m/Y H:i', $row['addtime']);
     $row['updatetime'] = $row['updatetime'] ? nv_date('d/m/Y H:i', $row['updatetime']) : '';
-
     $xtpl->assign('ROW', $row);
     $xtpl->parse('main.loop');
 }

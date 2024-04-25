@@ -54,7 +54,7 @@ function get_authour_alias(id, checksess) {
     var name_author = strip_tags(document.getElementById('element_name_author').value);
     if (name_author != '') {
         $.post(
-            script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=authour&nocache=' + new Date().getTime(),
+            script_name + '?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=add_author&nocache=' + new Date().getTime(),
             'changealias=' + checksess + '&name_author=' + encodeURIComponent(name_author) + '&id=' + id, function(res) {
                 if (res != "") {
                     document.getElementById('element_alias').value = res;

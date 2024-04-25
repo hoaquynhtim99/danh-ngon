@@ -20,6 +20,7 @@ $lang_translator['info'] = '';
 $lang_translator['langtype'] = 'lang_module';
 
 $lang_module['add'] = 'Thêm';
+$lang_module['back'] = 'Quay lại';
 $lang_module['add_and_return'] = 'Thêm và quay lại';
 $lang_module['add_again'] ='Thêm và thêm tiếp';
 $lang_module['main'] = 'Danh sách danh ngôn';
@@ -116,7 +117,6 @@ $lang_module['url_cancel'] = 'Hủy bỏ';
 $lang_module['error_required_catid'] = 'Lỗi: Bạn cần chọn danh mục';
 $lang_module['error_required_name_author'] = 'Lỗi: Bạn cần nhập tên tác giả';
 $lang_module['error_duplicate_name_author'] = 'Lỗi: Tên tác giả này đã có';
-$lang_module['name_authour'] = 'Tên tác giả';
 $lang_module['description_authour'] = 'Mô tả ngắn gọn';
 $lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
 $lang_module['image_authour'] = 'Ảnh đại diện';

@@ -1,36 +1,81 @@
 <!-- BEGIN: main -->
-<!-- BEGIN: add_btn -->
-<div class="form-group">
-    <a href="#" data-toggle="add" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> {LANG.add_authour}</a>
+<link type="text/css" href="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet" />
+<link type="text/css" href="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/locales/bootstrap-datepicker.{NV_LANG_INTERFACE}.min.js"></script>
+<div class="row">
+    <div class="col-lg-18">
+        <form method="get" action="{NV_BASE_ADMINURL}index.php">
+            <input type="hidden" name="{NV_LANG_VARIABLE}" value="{NV_LANG_DATA}">
+            <input type="hidden" name="{NV_NAME_VARIABLE}" value="{MODULE_NAME}">
+            <input type="hidden" name="{NV_OP_VARIABLE}" value="{OP}">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="element_q">{LANG.search_keywords}:</label>
+                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.enter_search_key}">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="element_from">{LANG.from_day}:</label>
+                        <input type="text" class="form-control datepicker" id="element_from" name="f" value="{SEARCH.from}" placeholder="dd-mm-yyyy" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="element_to">{LANG.to_day}:</label>
+                        <input type="text" class="form-control datepicker" id="element_to" name="t" value="{SEARCH.to}" placeholder="dd-mm-yyyy" autocomplete="off">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i> {GLANG.search}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-6">
+        <div class="form-group text-right">
+            <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
+            <a href="{LINK_ADD_NEW}" class="btn btn-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.add_authour}</a>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('[data-toggle="add"]').on('click', function(e) {
-            e.preventDefault();
-            $('html, body').animate({
-                scrollTop: $('#form-holder').offset().top
-            }, 200, function() {
-                $('[name="name_author"]').focus();
-            });
-        });
+$(document).ready(function() {
+    $('.datepicker').datepicker({
+        language: '{NV_LANG_INTERFACE}',
+        format: 'dd-mm-yyyy',
+        weekStart: 1,
+        todayBtn: 'linked',
+        autoclose: true,
+        todayHighlight: true,
+        zIndexOffset: 1000
     });
+});
 </script>
-<!-- END: add_btn -->
 <form>
     <div class="table-responsive">
-        <table class="table table-striped table-bordered table-hover">
-            <colgroup>
-                <col class="w100">
-            </colgroup>
+        <table class="table table-hover table-striped table-bordered">
             <thead>
             <tr>
                 <th style="width: 1%" class="text-center">
                     <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
                 </th>
-                <th style="width: 10%" class="text-nowrap">{LANG.order}</th>
-                <th style="width: 65%" class="text-nowrap">{LANG.name_authour}</th>
+                <th style="width: 40%" class="text-nowrap">
+                    <a href="{URL_ORDER_NAME_AUTHOR}">{ICON_ORDER_TITLE} {LANG.title}</a>
+                </th>
                 <th style="width: 15%" class="text-center text-nowrap">{LANG.image_authour}</th>
-                <th style="width: 10%" class="text-center text-nowrap">{LANG.function}</th>
+                <th style="width: 15%" class="text-nowrap">
+                    <a href="{URL_ORDER_ADDTIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
+                </th>
+                <th style="width: 15%" class="text-nowrap">
+                    <a href="{URL_ORDER_UPDATETIME}">{ICON_ORDER_EDIT_TIME} {LANG.edittime}</a>
+                </th>
+                <th style="width: 14%" class="text-nowrap text-center">{LANG.function}</th>
             </tr>
             </thead>
             <tbody>
@@ -39,21 +84,14 @@
                 <td class="text-center">
                     <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
                 </td>
+                <td><strong>{ROW.name_author}</strong></td>
                 <td class="text-center">
-                    <select id="change_weight_{ROW.id}" onchange="nv_change_authour_weight('{ROW.id}', '{NV_CHECK_SESSION}');" class="form-control input-sm">
-                        <!-- BEGIN: weight -->
-                        <option value="{WEIGHT.w}"{WEIGHT.selected}>{WEIGHT.w}</option>
-                        <!-- END: weight -->
-                    </select>
+                    <img src="{ROW.image}" class="img-thumbnail img__authour"  onclick="showImagePopup('{ROW.image_upload}')">
                 </td>
-                <td>
-                    <strong>{ROW.name_author}</strong>
-                </td>
-                <td class="text-center">
-                    <img src="{ROW.image}" width="60" height="60" class="img-thumbnail img__authour">
-                </td>
+                <td class="text-nowrap">{ROW.addtime}</td>
+                <td class="text-nowrap">{ROW.updatetime}</td>
                 <td class="text-center text-nowrap">
-                    <a class="btn btn-sm btn-default" href="{ROW.url_edit}"><i class="fa fa-edit"></i> {GLANG.edit}</a>
+                    <a href="{ROW.url_edit}" class="btn btn-xs btn-default"><i class="fa fa-edit"></i> {GLANG.edit}</a>
                     <a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="nv_delele_authors('{ROW.id}', '{NV_CHECK_SESSION}');"><i class="fa fa-trash"></i> {GLANG.delete}</a>
                 </td>
             </tr>
@@ -62,7 +100,7 @@
             <!-- BEGIN: generate_page -->
             <tfoot>
             <tr>
-                <td colspan="6" class="text-center">
+                <td colspan="6">
                     {GENERATE_PAGE}
                 </td>
             </tr>
@@ -79,103 +117,24 @@
         <button type="button" class="btn btn-primary" onclick="nv_authour_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
     </div>
 </form>
-<div id="form-holder"></div>
-<!-- BEGIN: error -->
-<div class="alert alert-danger">{ERROR}</div>
-<!-- END: error -->
-<h2><i class="fa fa-th-large" aria-hidden="true"></i> {CAPTION}</h2>
-<p class="text-info"><span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span> {LANG.is_required}</p>
-<div class="panel panel-default">
-    <div class="panel-body">
-        <form method="post" action="{FORM_ACTION}" class="form-horizontal">
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_name_author">{LANG.name_authour} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
-                <div class="col-sm-18 col-lg-10">
-                    <input type="text" id="element_name_author" name="name_author" value="{DATA.name_author}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_alias">{LANG.alias}</label>
-                <div class="col-sm-18 col-lg-10">
-                    <div class="input-group">
-                        <input type="text" id="element_alias" name="alias" value="{DATA.alias}" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')"><i class="fa fa-retweet"></i></button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_description">{LANG.description}:</label>
-                <div class="col-sm-18 col-lg-10">
-                    <textarea class="form-control" rows="3" name="description" id="element_description">{DATA.description}</textarea>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_bodyhtml">{LANG.bodyhtml_authour}:</label>
-                <div class="col-sm-18 col-lg-10">
-                    <input type="text" id="element_bodyhtml" name="bodyhtml" value="{DATA.bodyhtml}" class="form-control">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_image">{LANG.image_authour}:</label>
-                <div class="col-sm-18 col-lg-10">
-                    <div class="input-group">
-                        <input type="text" id="element_image" name="image" value="{DATA.image}" class="form-control">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" id="element_image_pick"><i class="fa fa-file-image-o"></i></button>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-18 col-sm-offset-6">
-                    <input type="hidden" name="save" value="{NV_CHECK_SESSION}">
-                    <button type="submit" class="btn btn-primary">{GLANG.submit}</button>
-                </div>
-            </div>
-        </form>
-    </div>
+<div id="imagePopup" style="display:none; position:fixed; z-index:1001; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5);" onclick="closePopupIfOutside(event)">
+    <span style="position:absolute; right:20px; top:20px; cursor:pointer; color:#fff; font-size:30px;" onclick="closePopup()">&times;</span>
+    <img id="popupImg" class="img-thumbnail" style="max-width:90%; max-height:80%; margin:auto; position:absolute; left:0; right:0; top:10%; bottom:10%;" onclick="event.stopPropagation()">
 </div>
+<script>
+    function showImagePopup(src) {
+        document.getElementById('popupImg').src = src;
+        document.getElementById('imagePopup').style.display = 'block';
+    }
 
-<!-- BEGIN: scroll -->
-<script type="text/javascript">
-    $(window).on('load', function() {
-        $('html, body').animate({
-            scrollTop: $('#form-holder').offset().top
-        }, 200, function() {
-            $('[name="name"]').focus();
-        });
-    });
-</script>
-<!-- END: scroll -->
+    function closePopup() {
+        document.getElementById('imagePopup').style.display = 'none'; // Ẩn popup
+    }
 
-<!-- BEGIN: getalias -->
-<script type="text/javascript">
-    $(document).ready(function() {
-        var autoAlias = true;
-        $('#element_name_author').on('change', function() {
-            if (autoAlias) {
-                get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}');
-            }
-        });
-        $('#element_alias').on('keyup', function() {
-            if (trim($(this).val()) == '') {
-                autoAlias = true;
-            } else {
-                autoAlias = false;
-            }
-        });
-    });
-</script>
-<!-- END: getalias -->
-
-<script type="text/javascript">
-    $(document).ready(function(){
-        $('#element_image_pick').on('click', function(e) {
-            e.preventDefault();
-            nv_open_browse(script_name + "?" + nv_name_variable + "=upload&popup=1&area=element_image&path={UPLOAD_PATH}&type=image&currentpath={UPLOAD_CURRENT}", "NVImg", 850, 420, "resizable=no,scrollbars=no,toolbar=no,location=no,status=no");
-        });
-    });
+    function closePopupIfOutside(event) {
+        if (event.target === document.getElementById('imagePopup')) {
+            closePopup();
+        }
+    }
 </script>
 <!-- END: main -->

@@ -13,11 +13,33 @@ if (!defined('NV_IS_FILE_ADMIN')) {
     die('Stop!!!');
 }
 
+// Tạo alias
+if ($nv_Request->get_title('changealias','post, get') === NV_CHECK_SESSION) {
+    $name_author = $nv_Request->get_title('name_author', 'post', '');
+    $id = $nv_Request->get_absint('id', 'post', 0);
+
+    $alias = strtolower(change_alias($name_author));
+
+    $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id !=" . $id . " AND alias = :alias");
+    $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
+    $stmt->execute();
+
+    if ($stmt->fetchColumn()) {
+        $weight = $db->query("SELECT MAX(id) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors")->fetchColumn();
+        $weight = intval($weight) + 1;
+        $alias = $alias . '-' . $weight;
+    }
+
+    include NV_ROOTDIR . '/includes/header.php';
+    echo $alias;
+    include NV_ROOTDIR . '/includes/footer.php';
+}
+
 $array = $error = [];
 $is_sumit_form = $is_edit = false;
 $currentpath = NV_UPLOADS_DIR . '/' . $module_upload;
 $id = $nv_Request->get_int('id', 'post,get', 0);
-
+$formmodal = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=authour';
 if (!empty($id)) {
     $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . ' WHERE id = ' . $id;
     $result = $db->query($sql);
@@ -36,7 +58,9 @@ if (!empty($id)) {
         'catids' => 0,
         'author_id' => 0,
         'content' => '',
-        'keywords' => ''
+        'keywords' => '',
+        'name_author' => '',
+        'alias' => '',
     ];
 
     $caption = $nv_Lang->getModule('content');
@@ -52,7 +76,7 @@ while ($row = $result_cats->fetch()) {
 }
 
 // Lấy dữ liệu bảng tác giả
-$db->sqlreset()->select('id, name_author')->from(NV_PREFIXLANG . '_' . $module_data . '_authors')->order('weight ASC');
+$db->sqlreset()->select('id, name_author')->from(NV_PREFIXLANG . '_' . $module_data . '_authors')->order('id ASC');
 $result_authors = $db->query($db->sql());
 while ($row = $result_authors->fetch()) {
     $array_authors[$row['id']] = $row['name_author'];
@@ -126,6 +150,7 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
 
 if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
     $array['name_author'] = $nv_Request->get_title('name_author', 'post', '');
+    $array['alias'] = $nv_Request->get_title('alias', 'post', '');
 
     if (empty($array['name_author'])) {
         $res = [
@@ -135,14 +160,12 @@ if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
         nv_jsonOutput($res);
     }
 
-    $sql = "SELECT MAX(weight) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors";
-    $weight = intval($db->query($sql)->fetchColumn()) + 1;
-
-    $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors (name_author, weight) VALUES (:name_author, ". $weight .")";
+    $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors (name_author, alias) VALUES (:name_author, :alias)";
     $sth = $db->prepare($sql);
     $sth->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
+    $sth->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
     $sth->execute();
-    nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Author_', ' ', $admin_info['admin_id']);
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Author_modal', ' ', $admin_info['admin_id']);
 
     $res = [
         'res' => 'success',
@@ -157,6 +180,8 @@ $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
 $xtpl->assign('CAPTION', $caption);
 $xtpl->assign('FORM_ACTION', $form_action);
 $xtpl->assign('DATA', $array);
+$xtpl->assign('URL_BACK', NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name);
+
 
 if (!$is_edit) {
     $xtpl->parse('main.btn_add');
@@ -184,6 +209,10 @@ if (!empty($array_authors)) {
         ]);
         $xtpl->parse('main.author');
     }
+}
+
+if (empty($array['alias'])) {
+    $xtpl->parse('main.getalias');
 }
 
 // Hiển thị lỗi

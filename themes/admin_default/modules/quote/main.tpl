@@ -64,9 +64,10 @@ $(document).ready(function() {
                     <th style="width: 1%" class="text-center">
                         <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
                     </th>
-                    <th style="width: 40%" class="text-nowrap">
+                    <th style="width: 20%" class="text-nowrap">
                         <a href="{URL_ORDER_CONTENT}">{ICON_ORDER_TITLE} {LANG.title}</a>
-                    </th>
+                    <th style="width: 15%" class="text-nowrap">{LANG.name_authour}</th>
+                    <th style="width: 15%" class="text-nowrap">{LANG.cats_title}</th>
                     <th style="width: 15%" class="text-nowrap">
                         <a href="{URL_ORDER_ADDTIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
                     </th>
@@ -84,6 +85,8 @@ $(document).ready(function() {
                         <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
                     </td>
                     <td><strong>{ROW.content}</strong></td>
+                    <td class="text-nowrap">{ROW.name_author}</td>
+                    <td class="text-nowrap">{ROW.name_cat}</td>
                     <td class="text-nowrap">{ROW.addtime}</td>
                     <td class="text-nowrap">{ROW.updatetime}</td>
                     <td class="text-center">

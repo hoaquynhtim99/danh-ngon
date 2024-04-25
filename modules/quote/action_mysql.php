@@ -21,6 +21,8 @@ $sql_drop_module[] = "DROP TABLE IF EXISTS " . $db_config['prefix'] . "_" . $lan
 
 $sql_drop_module[] = "DROP TABLE IF EXISTS " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_authors";
 
+$sql_drop_module[] = "DROP TABLE IF EXISTS " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_tags";
+
 $sql_create_module = $sql_drop_module;
 
 // # 1. Bảng quản lý danh ngôn
@@ -29,7 +31,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   catids mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID Danh mục',
   author_id mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tác giả',
   tagids mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tag có thể 1 danh ngôn nhiêu tag tag1,tag2,...',
-  content mediumtext NOT NULL DEFAULT '' COMMENT 'Nội dung',
+  content mediumtext NOT NULL COMMENT 'Nội dung',
   addtime int(11) unsigned NOT NULL DEFAULT '0',
   updatetime int(11) unsigned NOT NULL DEFAULT '0',
   keywords varchar(250) NOT NULL DEFAULT '' COMMENT 'Từ khóa',
@@ -51,11 +53,10 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   description text NOT NULL COMMENT 'Mô tả ngắn gọn',
   bodyhtml longtext NOT NULL COMMENT 'Chi tiết',
   image varchar(255) NOT NULL DEFAULT '' COMMENT 'Ảnh mô tả',
-  is_thumb tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0 là không có ảnh, 1 ảnh asset, 2 ảnh upload 3 ảnh remote',
+  is_thumb tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '0 là không có ảnh, 1 ảnh asset, 2 ảnh upload',
   admin_id int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'ID người đăng',
   addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
-  weight smallint(4) unsigned NOT NULL DEFAULT '0' COMMENT 'Thứ tự',
   PRIMARY KEY (id),
   KEY addtime (addtime),
   KEY updatetime (updatetime)
@@ -84,14 +85,14 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   title varchar(250) NOT NULL DEFAULT '' COMMENT 'Tên tag',
   alias varchar(250) NOT NULL DEFAULT '' COMMENT 'Liên kết tĩnh',
-  description text NOT NULL DEFAULT '' COMMENT 'Mô tả',
-  keywords text NOT NULL DEFAULT '' COMMENT 'Từ khóa',
+  description text NOT NULL COMMENT 'Mô tả',
+  keywords text NOT NULL COMMENT 'Từ khóa',
   image varchar(255) NOT NULL DEFAULT '' COMMENT 'Ảnh mô tả',
   addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
   PRIMARY KEY (id),
   KEY addtime (addtime),
-  KEY updatetime (updatetime), 
+  KEY updatetime (updatetime),
   KEY alias (alias),
   UNIQUE KEY title (title)
 ) ENGINE=InnoDB COMMENT 'Tags'";

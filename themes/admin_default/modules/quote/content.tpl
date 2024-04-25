@@ -50,12 +50,21 @@
                 <div class="col-sm-18 col-sm-offset-6">
                     <input type="hidden" name="save" value="{NV_CHECK_SESSION}">
                     <!-- BEGIN: btn_add -->
-                    <button type="submit" class="btn btn-primary" name="add_return">{LANG.add_and_return}</button>
-                    <button type="submit" class="btn btn-primary" name="add_again">{LANG.add_again}</button>
+                    <button type="submit" class="btn btn-primary" name="add_return">
+                        <i class="fa fa-floppy-o"></i>
+                        {LANG.add_and_return}</button>
+                    <button type="submit" class="btn btn-primary" name="add_again">
+                        <i class="fa fa-floppy-o"></i>
+                        {LANG.add_again}</button>
                     <!-- END: btn_add -->
                     <!-- BEGIN: btn_edit -->
-                    <button type="submit" class="btn btn-primary">{GLANG.submit}</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-floppy-o"></i>
+                        {GLANG.submit}</button>
                     <!-- END: btn_edit -->
+                    <a href="{URL_BACK}" class="btn btn-default">
+                        <i class="fa fa-reply"></i>
+                        {LANG.back}</a>
                 </div>
             </div>
         </form>
@@ -71,26 +80,41 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="addAuthorForm">
-                    <div class="form-group">
-                        <label>{LANG.name_authour}</label>
-                        <input type="text" class="form-control" id="authorName" name="name_author" required>
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form id="addAuthorForm" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="element_name_author">{LANG.name_authour}</label>
+                                <div class="col-sm-18 col-lg-10">
+                                    <input type="text" class="form-control" id="element_name_author" name="name_author" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-6 control-label" for="element_alias">{LANG.alias}</label>
+                                <div class="col-sm-18 col-lg-10">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="element_alias" name="alias">
+                                        <span class="input-group-btn">
+                                    <button class="btn btn-default" type="button" onclick="get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')">
+                                        <i class="fa fa-retweet"></i>
+                                    </button>
+                                </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-18 col-sm-offset-6">
+                                    <input type="hidden" name="add_author" value="{NV_CHECK_SESSION}">
+                                    <button type="button" class="btn btn-primary" id="submitAuthorBtn">{GLANG.submit}</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    <input type="hidden" name="add_author" value="{NV_CHECK_SESSION}">
-                    <button type="button" class="btn btn-primary" id="submitAuthorBtn">{GLANG.submit}</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
-<script>
-    $(document).ready(function() {
-        $('select').select2();
-    });
-</script>
-
 <script>
     $(document).ready(function() {
         $('#submitAuthorBtn').click(function() {
@@ -106,6 +130,31 @@
                 }
             });
         });
+    });
+</script>
+<!-- BEGIN: getalias -->
+<script type="text/javascript">
+    $(document).ready(function() {
+        var autoAlias = true;
+        $('#element_name_author').on('change', function() {
+            if (autoAlias) {
+                get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')
+            }
+        });
+        $('#element_alias').on('keyup', function() {
+            if (trim($(this).val()) == '') {
+                autoAlias = true;
+            } else {
+                autoAlias = false;
+            }
+        });
+    })
+</script>
+<!-- END: getalias -->
+
+<script>
+    $(document).ready(function() {
+        $('select').select2();
     });
 </script>
 <!-- END: main -->
