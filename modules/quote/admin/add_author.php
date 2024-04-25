@@ -62,6 +62,7 @@ if (!empty($id)) {
         'description' => '',
         'bodyhtml' => '',
         'image' => '',
+        'is_thumb' => 0,
     ];
     $page_title = $nv_Lang->getModule('add_authour');
     $caption = $nv_Lang->getModule('add_authour');
@@ -79,6 +80,13 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
     $array['alias'] = empty($array['alias']) ? change_alias($array['name_author']) : change_alias($array['alias']);
     $array['description'] = nv_nl2br(nv_htmlspecialchars(strip_tags($array['description'])), '<br />');
 
+    if (empty($array['image'])) {
+        $array['is_thumb'] = 0;
+    } else {
+        $array['is_thumb'] = 1;
+    }
+
+    // Xử lý ảnh cso đúng là file ko
     if (nv_is_file($array['image'], NV_UPLOADS_DIR . '/' . $module_upload)) {
         $array['image'] = substr($array['image'], strlen(NV_BASE_SITEURL . NV_UPLOADS_DIR . '/' . $module_upload . '/'));
     } else {
@@ -105,9 +113,9 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
         if (!$id) {
 
             $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors 
-            (name_author, alias, description, bodyhtml, image, admin_id, addtime, updatetime) 
+            (name_author, alias, description, bodyhtml, image, is_thumb, admin_id, addtime, updatetime) 
             VALUES 
-            (:name_author, :alias, :description, :bodyhtml, :image, " . $admin_info['admin_id'] . ", " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ")";
+            (:name_author, :alias, :description, :bodyhtml, :image, :is_thumb, " . $admin_info['admin_id'] . ", " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ")";
 
             $data_insert = [];
             $data_insert['name_author'] = $array['name_author'];
@@ -115,7 +123,7 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
             $data_insert['description'] = $array['description'];
             $data_insert['bodyhtml'] = $array['bodyhtml'];
             $data_insert['image'] = $array['image'];
-
+            $data_insert['is_thumb'] = $array['is_thumb'];
             $new_id = $db->insert_id($sql, 'id', $data_insert);
 
             if (!empty($new_id)) {
@@ -137,6 +145,7 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
             description = :description,
             bodyhtml = :bodyhtml,
             image = :image,
+            is_thumb = :is_thumb,
             updatetime = " . NV_CURRENTTIME . "
             WHERE id = " . $id;
             $sth = $db->prepare($sql);
@@ -145,6 +154,7 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
             $sth->bindParam(':description', $array['description'], PDO::PARAM_STR);
             $sth->bindParam(':bodyhtml', $array['bodyhtml'], PDO::PARAM_STR);
             $sth->bindParam(':image', $array['image'], PDO::PARAM_STR);
+            $sth->bindValue(':is_thumb', $array['is_thumb']);
             $sth->execute();
 
             $nv_Cache->delMod($module_name);
