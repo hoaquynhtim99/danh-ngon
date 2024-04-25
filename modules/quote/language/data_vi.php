@@ -17,4 +17,3 @@ if (!defined('NV_ADMIN')) {
 $db->query("INSERT INTO " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_cats (nums, title, description, addtime, updatetime, weight, status) VALUES
 (0, 'Danh ngôn Việt Nam', 'Danh ngôn Việt Nam', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 1, 1),
 (0, 'Danh ngôn nước ngoài', 'Danh ngôn nước ngoài', " . NV_CURRENTTIME . ", " . NV_CURRENTTIME . ", 2, 1)");
-

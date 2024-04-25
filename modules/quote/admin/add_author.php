@@ -12,6 +12,7 @@
 if (!defined('NV_IS_FILE_ADMIN')) {
     exit('Stop!!!');
 }
+
 if ($nv_Request->get_title('changealias', 'post', '') === NV_CHECK_SESSION) {
     $name_author = $nv_Request->get_title('name_author', 'post', '');
     $id = $nv_Request->get_absint('id', 'post', 0);

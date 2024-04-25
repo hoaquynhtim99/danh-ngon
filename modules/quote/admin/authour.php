@@ -13,7 +13,6 @@ if (!defined('NV_IS_FILE_ADMIN')) {
     exit('Stop!!!');
 }
 
-
 if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
     $id = $nv_Request->get_absint('id', 'post', 0);
 
