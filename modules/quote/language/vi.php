@@ -132,5 +132,7 @@ $lang_module['image_illustration'] = 'Hình ảnh minh họa';
 $lang_module['error_required_title_cats'] = 'Lỗi: Bạn cần nhập tiêu đề Tag';
 $lang_module['function_tag_success'] = 'Thực hiện thành công';
 $lang_module['tags_no_description'] = 'Không có mô tả';
+$lang_module['error_duplicate_alias'] = 'Lỗi: Liên kết tĩnh này đã có';
+$lang_module['search_note'] = 'Nhập từ khóa để tìm kiếm';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';

@@ -1,8 +1,4 @@
 <!-- BEGIN: main -->
-<div class="m-bottom">
-    <a href="{BASE_URL}" class="btn btn-primary m-bottom">{LANG.tag_all}</a>
-    <button class="btn btn-default m-bottom" type="button" data-toggle="modal" data-target="#addTagModal" onclick="addtagModal()">{LANG.add_tag}</button>
-</div>
 <div class="row">
     <div class="col-lg-16">
         <form method="get" action="{NV_BASE_ADMINURL}index.php">
@@ -13,7 +9,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="element_q">{LANG.search_keywords}:</label>
-                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.enter_search_key}">
+                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.search_note}">
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -24,6 +20,12 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div class="col-lg-8">
+        <div class="form-group text-right">
+            <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
+            <button class="btn btn-success m-bottom" type="button" data-toggle="modal" data-target="#addTagModal" onclick="addtagModal()"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.add_tag}</button>
+        </div>
     </div>
 </div>
 <form>

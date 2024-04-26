@@ -13,7 +13,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="element_q">{LANG.search_keywords}:</label>
-                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.enter_search_key}">
+                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.search_note}">
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -86,7 +86,9 @@ $(document).ready(function() {
                 </td>
                 <td><strong>{ROW.name_author}</strong></td>
                 <td class="text-center">
-                    <img src="{ROW.image}" class="img-thumbnail img__authour"  onclick="showImagePopup('{ROW.image_upload}')">
+                    <a  onclick="showAuthorImage('{ROW.image_upload}'); return false;" style="cursor: pointer;">
+                        <img src="{ROW.image}" class="img-thumbnail img__author">
+                    </a>
                 </td>
                 <td class="text-nowrap">{ROW.addtime}</td>
                 <td class="text-nowrap">{ROW.updatetime}</td>
@@ -117,24 +119,10 @@ $(document).ready(function() {
         <button type="button" class="btn btn-primary" onclick="nv_authour_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
     </div>
 </form>
-<div id="imagePopup" style="display:none; position:fixed; z-index:1001; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5);" onclick="closePopupIfOutside(event)">
-    <span style="position:absolute; right:20px; top:20px; cursor:pointer; color:#fff; font-size:30px;" onclick="closePopup()">&times;</span>
-    <img id="popupImg" class="img-thumbnail" style="max-width:90%; max-height:80%; margin:auto; position:absolute; left:0; right:0; top:10%; bottom:10%;" onclick="event.stopPropagation()">
-</div>
 <script>
-    function showImagePopup(src) {
-        document.getElementById('popupImg').src = src;
-        document.getElementById('imagePopup').style.display = 'block';
-    }
-
-    function closePopup() {
-        document.getElementById('imagePopup').style.display = 'none'; // Ẩn popup
-    }
-
-    function closePopupIfOutside(event) {
-        if (event.target === document.getElementById('imagePopup')) {
-            closePopup();
-        }
+    function showAuthorImage(imageSrc) {
+        var imageHtml = '<img src="' + imageSrc + '" class="img-fluid">';
+        modalShow('{LANG.image_authour}', imageHtml);
     }
 </script>
 <!-- END: main -->
