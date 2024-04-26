@@ -154,8 +154,8 @@ $xtpl->assign('SEARCH', $array_search);
 
 while ($row = $result->fetch()) {
     $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=add_author&amp;id=' . $row['id'];
-    $row['addtime'] = nv_date('d/m/Y', $row['addtime']);
-    $row['updatetime'] = nv_date('d/m/Y', $row['updatetime']);
+    $row['addtime'] = $row['addtime'] ? nv_date('d/m/Y H:i', $row['addtime']) : '';
+    $row['updatetime'] = $row['updatetime'] ? nv_date('d/m/Y H:i', $row['updatetime']) : '';
 
     if (empty($row['image'])) {
         $row['image'] = $row['image_upload'] = NV_STATIC_URL . 'themes/default/images/users/no_avatar.png';

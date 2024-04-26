@@ -57,7 +57,7 @@
                 </td>
                 <td class="text-center">{ROW.keywords}</td>
                 <td class="text-center text-nowrap">
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addTagModal"
+                    <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#addTagModal"
                             data-id="{ROW.id}" data-title="{ROW.title}" data-alias="{ROW.alias}" data-description="{ROW.description}"
                             data-keywords="{ROW.keywords}" data-image="{ROW.image}"
                             onclick="setDataToModal(this)">
@@ -143,7 +143,9 @@
                     <div class="row">
                         <div class="col-sm-18 col-sm-offset-6">
                             <input type="hidden" name="save_tag" value="{NV_CHECK_SESSION}">
-                            <button type="button" class="btn btn-primary" id="submitTagBtn">{GLANG.submit}</button>
+                            <button type="button" class="btn btn-primary" id="submitTagBtn">
+                                <i class="fa fa-floppy-o"></i>
+                                {GLANG.submit}</button>
                         </div>
                     </div>
 

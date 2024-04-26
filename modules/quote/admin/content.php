@@ -173,10 +173,11 @@ if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
         nv_jsonOutput($res);
     }
 
-    $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors (name_author, alias) VALUES (:name_author, :alias)";
+    $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors (name_author, alias ,addtime) VALUES (:name_author, :alias, :addtime)";
     $sth = $db->prepare($sql);
     $sth->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
     $sth->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
+    $sth->bindValue(':addtime', NV_CURRENTTIME);
     $sth->execute();
     nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Author_modal', ' ', $admin_info['admin_id']);
 

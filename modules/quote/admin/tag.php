@@ -165,6 +165,7 @@ $xtpl->assign('DATA', $array);
 $xtpl->assign('MODULE_NAME', $module_name);
 $xtpl->assign('MODULE_FILE', $module_file);
 $xtpl->assign('OP', $op);
+$xtpl->assign('SEARCH', $array_search);
 
 if (!empty($listall)) {
     foreach ($listall as $row) {
