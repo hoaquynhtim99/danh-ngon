@@ -93,6 +93,19 @@ if ($nv_Request->get_title('save_tag','post, get') === NV_CHECK_SESSION) {
         nv_jsonOutput($res);
     }
 
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE alias = :alias AND id != :id";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':alias', $data['alias'], PDO::PARAM_STR);
+    $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
+    $stmt->execute();
+    if ($stmt->fetchColumn()) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('error_duplicate_alias')
+        ];
+        nv_jsonOutput($res);
+    }
+
     if ($data['id'] > 0) {
         $caption = $nv_Lang->getModule('edit_tag');
         $stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_tags SET title = :title, alias = :alias, description = :description, keywords = :keywords, image = :image, updatetime = :updatetime WHERE id=' . $data['id']);
