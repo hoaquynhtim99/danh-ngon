@@ -123,6 +123,7 @@ $lang_module['image_authour'] = 'Ảnh đại diện';
 $lang_module['error_required_id'] = 'Lỗi: Bạn cần chọn id để xóa';
 $lang_module['confirm_delete_all'] = 'Bạn có chắc chắn muốn xóa những gì đã chọn không?';
 
+$lang_module['Tags'] = 'Tag';
 $lang_module['tag_admin'] = 'Quản lý tag';
 $lang_module['tag_all'] = 'Tất cả tag';
 $lang_module['add_tag'] = 'Thêm tag';

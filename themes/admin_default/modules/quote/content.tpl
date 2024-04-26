@@ -10,7 +10,7 @@
     <div class="panel-body">
         <form method="post" action="{FORM_ACTION}" class="form-horizontal">
             <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_catids">{LANG.cats_title} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
+                <label class="col-sm-6 control-label" for="element_catids">{LANG.cats_title}</label>
                 <div class="col-sm-18 col-lg-10">
                     <select class="form-control" name="catids">
                         <option value="0" selected disabled>{LANG.please_select}</option>
@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_author_id">{LANG.name_authour} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
+                <label class="col-sm-6 control-label" for="element_author_id">{LANG.name_authour} </label>
                 <div class="col-sm-18 col-lg-10">
                     <select class="form-control" name="author_id">
                         <option value="0" selected disabled>{LANG.please_select}</option>
@@ -33,6 +33,16 @@
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAuthorModal">
                     {LANG.add_authour}
                 </button>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-6 control-label" for="element_title">{LANG.Tags}</label>
+                <div class="col-sm-18 col-lg-10">
+                    <select class="form-control" name="tagids[]" multiple data-placeholder="{LANG.please_select}">
+                        <!-- BEGIN: tag -->
+                        <option value="{TAG.key}"{TAG.selected}>{TAG.title}</option>
+                        <!-- END: tag -->
+                    </select>
+                </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-6 control-label" for="element_content">{LANG.content_content} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>

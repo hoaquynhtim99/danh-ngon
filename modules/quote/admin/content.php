@@ -57,6 +57,7 @@ if (!empty($id)) {
         'id' => 0,
         'catids' => 0,
         'author_id' => 0,
+        'tagids' => '',
         'content' => '',
         'keywords' => '',
         'name_author' => '',
@@ -82,10 +83,19 @@ while ($row = $result_authors->fetch()) {
     $array_authors[$row['id']] = $row['name_author'];
 }
 
+// //Phần lấy danh sách tag
+$db->sqlreset()->select('id, title')->from(NV_PREFIXLANG . '_' . $module_data . '_tags')->order('id ASC');
+$result_tags = $db->query($db->sql());
+while ($row = $result_tags->fetch()) {
+    $array_tags[$row['id']] = $row['title'];
+}
+
 if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
     $is_sumit_form = true;
     $array['catids'] = $nv_Request->get_int('catids', 'post', 0);
     $array['author_id'] = $nv_Request->get_int('author_id', 'post', 0);
+    $array['tagids'] = $nv_Request->get_typed_array('tagids', 'post', 'int', []);
+    $array['tagids'] = implode(',', $array['tagids']);
     $array['content'] = $nv_Request->get_textarea('content', '', NV_ALLOWED_HTML_TAGS);
     $array['keywords'] = $nv_Request->get_title('keywords', 'post', '');
 
@@ -96,11 +106,12 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
     if (empty($error)) {
         if (!$id) {
             $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "
-            (catids, author_id, content, addtime, keywords, status) VALUES
-            (:catids, :author_id, :content, " . NV_CURRENTTIME . ", :keywords, 1)";
+            (catids, author_id, tagids, content, addtime, keywords, status) VALUES
+            (:catids, :author_id, :tagids, :content, " . NV_CURRENTTIME . ", :keywords, 1)";
             $data_insert = [];
             $data_insert['catids'] = $array['catids'];
             $data_insert['author_id'] = $array['author_id'];
+            $data_insert['tagids'] = $array['tagids'];
             $data_insert['content'] = $array['content'];
             $data_insert['keywords'] = $array['keywords'];
 
@@ -124,6 +135,7 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
             $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET
             catids = :catids,
             author_id = :author_id,
+            tagids = :tagids,
             content = :content,
             keywords = :keywords,
             updatetime = :updatetime
@@ -132,6 +144,7 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
             $sth = $db->prepare($sql);
             $sth->bindParam(':catids', $array['catids'], PDO::PARAM_INT);
             $sth->bindParam(':author_id', $array['author_id'], PDO::PARAM_INT);
+            $sth->bindParam(':tagids', $array['tagids'], PDO::PARAM_STR);
             $sth->bindParam(':content', $array['content'], PDO::PARAM_STR);
             $sth->bindParam(':keywords', $array['keywords'], PDO::PARAM_STR);
             $sth->bindValue(':updatetime', NV_CURRENTTIME);
@@ -208,6 +221,20 @@ if (!empty($array_authors)) {
             'selected' => $author_id == $array['author_id'] ? ' selected="selected"' : ''
         ]);
         $xtpl->parse('main.author');
+    }
+}
+
+if (!empty($array_tags)) {
+    // Chuyển chuỗi tagids thành một mảng các ID
+    $selected_tag_ids = explode(',', $array['tagids']);
+
+    foreach ($array_tags as $tag_id => $title) {
+        $xtpl->assign('TAG', [
+            'key' => $tag_id,
+            'title' => $title,
+            'selected' => in_array($tag_id, $selected_tag_ids) ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.tag');
     }
 }
 
