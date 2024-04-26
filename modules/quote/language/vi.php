@@ -21,8 +21,8 @@ $lang_translator['langtype'] = 'lang_module';
 
 $lang_module['add'] = 'Thêm';
 $lang_module['back'] = 'Quay lại';
-$lang_module['add_and_return'] = 'Thêm và quay lại';
-$lang_module['add_again'] ='Thêm và thêm tiếp';
+$lang_module['add_and_return'] = 'Lưu và quay lại';
+$lang_module['add_again'] ='Lưu và thêm tiếp';
 $lang_module['main'] = 'Danh sách danh ngôn';
 $lang_module['title'] = 'Tiêu đề';
 $lang_module['alias'] = 'Liên kết tĩnh';
@@ -122,5 +122,14 @@ $lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
 $lang_module['image_authour'] = 'Ảnh đại diện';
 $lang_module['error_required_id'] = 'Lỗi: Bạn cần chọn id để xóa';
 $lang_module['confirm_delete_all'] = 'Bạn có chắc chắn muốn xóa những gì đã chọn không?';
+
+$lang_module['tag_admin'] = 'Quản lý tag';
+$lang_module['tag_all'] = 'Tất cả tag';
+$lang_module['add_tag'] = 'Thêm tag';
+$lang_module['edit_tag'] = 'Sửa tag';
+$lang_module['image_illustration'] = 'Hình ảnh minh họa';
+$lang_module['error_required_title_cats'] = 'Lỗi: Bạn cần nhập tiêu đề Tag';
+$lang_module['function_tag_success'] = 'Thực hiện thành công';
+$lang_module['tags_no_description'] = 'Không có mô tả';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';

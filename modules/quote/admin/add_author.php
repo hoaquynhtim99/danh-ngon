@@ -34,7 +34,6 @@ if ($nv_Request->get_title('changealias', 'post', '') === NV_CHECK_SESSION) {
     include NV_ROOTDIR . '/includes/footer.php';
 }
 
-
 $array = $error = [];
 $base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
 $is_submit_form = $is_edit = false;

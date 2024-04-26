@@ -30,7 +30,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   catids mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID Danh mục',
   author_id mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tác giả',
-  tagids mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT 'ID tag có thể 1 danh ngôn nhiêu tag tag1,tag2,...',
+  tagids varchar(255) NOT NULL DEFAULT '0' COMMENT 'ID tag có thể 1 danh ngôn nhiêu tag tag1,tag2,...',
   content mediumtext NOT NULL COMMENT 'Nội dung',
   addtime int(11) unsigned NOT NULL DEFAULT '0',
   updatetime int(11) unsigned NOT NULL DEFAULT '0',
@@ -59,7 +59,8 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
   PRIMARY KEY (id),
   KEY addtime (addtime),
-  KEY updatetime (updatetime)
+  KEY updatetime (updatetime),
+  UNIQUE KEY alias (alias)
 ) ENGINE=InnoDB COMMENT 'Tác giả danh ngôn'";
 
 // # 3. Bảng quản lý danh mục
@@ -93,6 +94,5 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   PRIMARY KEY (id),
   KEY addtime (addtime),
   KEY updatetime (updatetime),
-  KEY alias (alias),
-  UNIQUE KEY title (title)
+  UNIQUE KEY alias (alias)
 ) ENGINE=InnoDB COMMENT 'Tags'";
