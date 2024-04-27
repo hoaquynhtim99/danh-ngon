@@ -25,6 +25,7 @@
         <div class="form-group text-right">
             <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
             <button class="btn btn-success m-bottom" type="button" data-toggle="modal" data-target="#addTagModal" onclick="addtagModal()"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.add_tag}</button>
+            <button class="btn btn-success m-bottom" type="button" data-toggle="modal" data-target="#addTagModalAll"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.add_tags_all}</button>
         </div>
     </div>
 </div>
@@ -157,6 +158,34 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="addTagModalAll" tabindex="-1" role="dialog" aria-labelledby="addTagModalAllLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" enctype="multipart/form-data" id="formTagAll">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="addTagModalAllLabel">{LANG.add_tags_all}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="element_title">{LANG.note_tags}: </label>
+                        <textarea class="form-control" name="title" id="element_title_all" rows="5"></textarea>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-18 col-sm-offset-6">
+                            <input type="hidden" name="save_tag_all" value="{NV_CHECK_SESSION}">
+                            <button type="button" class="btn btn-primary" id="submitTagBtnAll">
+                                <i class="fa fa-floppy-o"></i>
+                                {GLANG.submit}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function() {
         $('.tags-tip').tooltip();
@@ -228,6 +257,26 @@
             }).done(function(response) {
                 if (response['res'] == 'success') {
                     $('#addTagModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert(response['mess']);
+                }
+            })
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#submitTagBtnAll').click(function() {
+            var $form = $('#formTagAll');
+            $.ajax({
+                url: location.href,
+                type: 'POST',
+                data: $form.serialize(),
+            }).done(function(response) {
+                if (response['res'] == 'success') {
+                    $('#addTagModalAll').modal('hide');
+                    alert(response['mess']);
                     location.reload();
                 } else {
                     alert(response['mess']);

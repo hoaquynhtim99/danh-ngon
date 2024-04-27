@@ -133,6 +133,57 @@ if ($nv_Request->get_title('save_tag','post, get') === NV_CHECK_SESSION) {
     nv_jsonOutput($res);
 }
 
+if ($nv_Request->get_title('save_tag_all', 'post')) {
+    $titleTags = [];
+    $data['title'] = $nv_Request->get_textarea('title', '', NV_ALLOWED_HTML_TAGS);
+    $data['title'] = preg_split('/,\s*|\r\n|\n|\r/', $data['title'], -1, PREG_SPLIT_NO_EMPTY);
+    $data['title'] = array_map('strip_punctuation', $data['title']);
+
+    if (empty($data['title'])) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('error_required_title_cats')
+        ];
+        nv_jsonOutput($res);
+    }
+    foreach ($data['title'] as $title) {
+        $title = trim($title);
+        $alias = strtolower(change_alias($title));
+        $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE alias = :alias");
+        $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if ($stmt->fetchColumn()) {
+            $weight = $db->query("SELECT MAX(id) FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags")->fetchColumn();
+            $weight = intval($weight) + 1;
+            $alias = $alias . '-' . $weight;
+        }
+
+        // Kiểm tra trùng title
+        $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE title = :title");
+        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+        $stmt->execute();
+        if ($stmt->fetchColumn()) {
+            continue;
+        }
+
+        $stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_tags (title, alias, addtime) VALUES (:title, :alias, :addtime)');
+        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+        $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
+        $stmt->bindValue(':addtime', NV_CURRENTTIME);
+        $stmt->execute();
+        $titleTags[] = $title;
+        nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Tag ALL', ' ', $admin_info['userid']);
+        $nv_Cache->delMod($module_name);
+        $res = [
+            'res' => 'success',
+            'mess' => $nv_Lang->getModule('function_tag_success') . ' ' . implode(', ', $titleTags)
+        ];
+    }
+    nv_jsonOutput($res);
+
+}
+
 $array = [];
 $per_page = 20;
 $page = $nv_Request->get_absint('page', 'get', 1);

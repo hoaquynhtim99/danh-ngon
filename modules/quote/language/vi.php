@@ -134,5 +134,8 @@ $lang_module['function_tag_success'] = 'Thực hiện thành công';
 $lang_module['tags_no_description'] = 'Không có mô tả';
 $lang_module['error_duplicate_alias'] = 'Lỗi: Liên kết tĩnh này đã có';
 $lang_module['search_note'] = 'Nhập từ khóa để tìm kiếm';
+$lang_module['add_tags_all'] = 'Thêm nhiều tag';
+$lang_module['note_tags'] = 'Nhập mỗi tag trên một dòng hoặc phân cách bằng dấu phẩy';
+
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';
