@@ -171,9 +171,6 @@
     });
 </script>
 <script>
-    $('#element_keywords').tagsInput();
-</script>
-<script>
     $(document).ready(function() {
         $('#keyword_select2').select2({
             tags: true,
