@@ -102,6 +102,14 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
         $is_exists = true;
     }
 
+    $sql = "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE alias = :alias";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
+    $stmt->execute();
+    if ($stmt->fetchColumn()) {
+        $error[] = $nv_Lang->getModule('error_duplicate_alias');
+    }
+
     if (empty($array['name_author'])) {
         $error[] = $nv_Lang->getModule('error_required_name_author');
     } elseif ($is_exists) {

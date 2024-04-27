@@ -248,41 +248,27 @@
 </script>
 <script>
     $(document).ready(function() {
-        $('#submitTagBtn').click(function() {
-            var $form = $('#formTag');
-            $.ajax({
-                url: location.href,
-                type: 'POST',
-                data: $form.serialize(),
-            }).done(function(response) {
-                if (response['res'] == 'success') {
-                    $('#addTagModal').modal('hide');
-                    location.reload();
-                } else {
-                    alert(response['mess']);
-                }
-            })
-        });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        $('#submitTagBtnAll').click(function() {
-            var $form = $('#formTagAll');
-            $.ajax({
-                url: location.href,
-                type: 'POST',
-                data: $form.serialize(),
-            }).done(function(response) {
-                if (response['res'] == 'success') {
-                    $('#addTagModalAll').modal('hide');
-                    alert(response['mess']);
-                    location.reload();
-                } else {
-                    alert(response['mess']);
-                }
-            })
-        });
+        function setupTagFormSubmission(buttonId, formId, modalId) {
+            $(buttonId).click(function() {
+                var $form = $(formId);
+                $.ajax({
+                    url: location.href,
+                    type: 'POST',
+                    data: $form.serialize(),
+                }).done(function(response) {
+                    if (response['res'] == 'success') {
+                        $(modalId).modal('hide');
+                        alert(response['mess']);
+                        location.reload();
+                    } else {
+                        alert(response['mess']);
+                    }
+                })
+            });
+        }
+
+        setupTagFormSubmission('#submitTagBtn', '#formTag', '#addTagModal');
+        setupTagFormSubmission('#submitTagBtnAll', '#formTagAll', '#addTagModalAll');
     });
 </script>
 <!-- END: main -->

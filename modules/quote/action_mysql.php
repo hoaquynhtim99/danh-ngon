@@ -88,7 +88,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   alias varchar(250) NOT NULL DEFAULT '' COMMENT 'Liên kết tĩnh',
   description text  COMMENT 'Mô tả',
   keywords text  COMMENT 'Từ khóa',
-  image varchar(255)  DEFAULT '' COMMENT 'Ảnh mô tả',
+  image varchar(255) DEFAULT '' COMMENT 'Ảnh mô tả',
   addtime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian thêm',
   updatetime int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Thời gian sửa',
   PRIMARY KEY (id),

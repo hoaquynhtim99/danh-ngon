@@ -175,6 +175,30 @@ if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
         nv_jsonOutput($res);
     }
 
+    $sql = "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE name_author = :name_author";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
+    $stmt->execute();
+    if ($stmt->fetchColumn()) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('error_duplicate_name_author')
+        ];
+        nv_jsonOutput($res);
+    }
+
+    $sql = "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE alias = :alias";
+    $stmt = $db->prepare($sql);
+    $stmt->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
+    $stmt->execute();
+    if ($stmt->fetchColumn()) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('error_duplicate_alias')
+        ];
+        nv_jsonOutput($res);
+    }
+
     $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "_authors (name_author, alias ,addtime) VALUES (:name_author, :alias, :addtime)";
     $sth = $db->prepare($sql);
     $sth->bindParam(':name_author', $array['name_author'], PDO::PARAM_STR);
