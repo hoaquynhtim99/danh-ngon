@@ -44,6 +44,8 @@ if (!empty($id)) {
     $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . ' WHERE id = ' . $id;
     $result = $db->query($sql);
     $array = $result->fetch();
+    $array['keywords'] = explode(',', $array['keywords']);
+    $array['keywords'] = implode(',', array_map('trim', $array['keywords']));
 
     if (empty($array)) {
         nv_info_die($nv_Lang->getGlobal('error_404_title'), $nv_Lang->getGlobal('error_404_title'), $nv_Lang->getGlobal('error_404_content'));
@@ -97,12 +99,12 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
     $array['tagids'] = $nv_Request->get_typed_array('tagids', 'post', 'int', []);
     $array['tagids'] = implode(',', $array['tagids']);
     $array['content'] = $nv_Request->get_textarea('content', '', NV_ALLOWED_HTML_TAGS);
-    $array['keywords'] = $nv_Request->get_title('keywords', 'post', '');
+    $array['keywords'] = $nv_Request->get_typed_array('keywords', 'post', 'string', '');
+    $array['keywords'] = implode(',', $array['keywords']);
 
     if (empty($array['content'])) {
         $error[] = $nv_Lang->getModule('content_error_empty');
     }
-
     if (empty($error)) {
         if (!$id) {
             $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "
@@ -195,7 +197,6 @@ $xtpl->assign('CAPTION', $caption);
 $xtpl->assign('FORM_ACTION', $form_action);
 $xtpl->assign('DATA', $array);
 $xtpl->assign('URL_BACK', NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name);
-
 
 if (!$is_edit) {
     $xtpl->parse('main.btn_add');

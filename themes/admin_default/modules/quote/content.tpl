@@ -53,7 +53,7 @@
             <div class="form-group">
                 <label class="col-sm-6 control-label" for="element_keywords">{LANG.keywords}: </label>
                 <div class="col-sm-18 col-lg-10">
-                    <input type="text" name="keywords" class="form-control" id="element_keywords" value="{DATA.keywords}">
+                    <select id="keyword_select2" class="form-control" name="keywords[]" multiple="multiple"></select>
                 </div>
             </div>
             <div class="row">
@@ -168,6 +168,27 @@
 <script>
     $(document).ready(function() {
         $('select').select2();
+    });
+</script>
+<script>
+    $('#element_keywords').tagsInput();
+</script>
+<script>
+    $(document).ready(function() {
+        $('#keyword_select2').select2({
+            tags: true,
+            placeholder: '{LANG.please_select}',
+            minimumInputLength: 1,
+            tokenSeparators: [',', '\n'],
+        });
+        var keywords = '{DATA.keywords}';
+        if (keywords != '') {
+            var keyword = keywords.split(',');
+            for (var i = 0; i < keyword.length; i++) {
+                var newOption = new Option(keyword[i], keyword[i], true, true);
+                $('#keyword_select2').append(newOption).trigger('change');
+            }
+        }
     });
 </script>
 <!-- END: main -->
