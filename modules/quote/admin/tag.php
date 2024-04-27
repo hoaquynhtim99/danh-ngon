@@ -93,6 +93,13 @@ if ($nv_Request->get_title('save_tag','post, get') === NV_CHECK_SESSION) {
         nv_jsonOutput($res);
     }
 
+    if (empty($data['alias'])) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('error_required_alias')
+        ];
+    }
+
     $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE alias = :alias AND id != :id";
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':alias', $data['alias'], PDO::PARAM_STR);
