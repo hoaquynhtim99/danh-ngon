@@ -66,11 +66,42 @@ $per_page = 20;
 $page = $nv_Request->get_absint('page', 'get', 1);
 $base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name;
 
+$db->sqlreset()
+    ->select('*')
+    ->from(NV_PREFIXLANG . '_' . $module_data . '_cats');
+$result = $db->query($db->sql());
+$array_catids = [];
+while ($row = $result->fetch()) {
+    $array_catids[$row['id']] = $row['title'];
+}
+
+$db->sqlreset()
+    ->select('*')
+    ->from(NV_PREFIXLANG . '_' . $module_data . '_authors');
+$result = $db->query($db->sql());
+$array_authors = [];
+while ($row = $result->fetch()) {
+    $array_authors[$row['id']] = $row['name_author'];
+}
+
+$db->sqlreset()
+    ->select('*')
+    ->from(NV_PREFIXLANG . '_' . $module_data . '_tags');
+$result = $db->query($db->sql());
+$array_tags = [];
+while ($row = $result->fetch()) {
+    $array_tags[$row['id']] = $row['title'];
+}
+
 // Phần tìm kiếm
 $array_search = [];
 $array_search['q'] = $nv_Request->get_title('q', 'get', '');
+$array_search['catids'] = $nv_Request->get_int('catids', 'get', 0);
+$array_search['author_id'] = $nv_Request->get_int('author_id', 'get', 0);
+$array_search['tagids'] = $nv_Request->get_int('tagids', 'get', 0);
 $array_search['from'] = $nv_Request->get_title('f', 'get', '');
 $array_search['to'] = $nv_Request->get_title('t', 'get', '');
+$array_search['catids'] = $nv_Request->get_int('catids', 'get', 0);
 
 // Xử lý dữ liệu tìm kiếm
 if (preg_match('/^([0-9]{1,2})\-([0-9]{1,2})\-([0-9]{4})$/', $array_search['from'], $m)) {
@@ -95,6 +126,22 @@ if (!empty($array_search['q'])) {
         keywords LIKE '%" . $dblikekey . "%'
     )";
 }
+
+if (!empty($array_search['catids'])) {
+    $base_url .= '&amp;catids=' . $array_search['catids'];
+    $where[] = "catids=" . $array_search['catids'];
+}
+
+if (!empty($array_search['author_id'])) {
+    $base_url .= '&amp;author_id=' . $array_search['author_id'];
+    $where[] = "author_id=" . $array_search['author_id'];
+}
+
+if (!empty($array_search['tagids'])) {
+    $base_url .= '&amp;tagids=' . $array_search['tagids'];
+    $where[] = "tagids LIKE '%" . $array_search['tagids'] . "%'";
+}
+
 if (!empty($array_search['from'])) {
     $base_url .= '&amp;f=' . nv_date('d-m-Y', $array_search['from']);
     $where[] = "addtime>=" . $array_search['from'];
@@ -169,6 +216,7 @@ $xtpl->assign('MODULE_FILE', $module_file);
 $xtpl->assign('OP', $op);
 
 $xtpl->assign('LINK_ADD_NEW', NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=content');
+$xtpl->assign('LINK_IMPORT', NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=import');
 
 // Chuyển tìm kiếm sang ngày tháng
 $array_search['from'] = empty($array_search['from']) ? '' : nv_date('d-m-Y', $array_search['from']);
@@ -176,6 +224,40 @@ $array_search['to'] = empty($array_search['to']) ? '' : nv_date('d-m-Y', $array_
 
 $xtpl->assign('SEARCH', $array_search);
 
+if (!empty($array_catids)) {
+    foreach ($array_catids as $id => $title) {
+        $xtpl->assign('CAT', [
+            'id' => $id,
+            'title' => $title,
+            'selected' => $id == $array_search['catids'] ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.cat');
+    }
+}
+
+if (!empty($array_authors)) {
+    foreach ($array_authors as $id => $name_author) {
+        $xtpl->assign('AUTHOR', [
+            'id' => $id,
+            'name_author' => $name_author,
+            'selected' => $id == $array_search['author_id'] ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.author');
+    }
+}
+
+if (!empty($array_tags)) {
+    foreach ($array_tags as $id => $title) {
+        $xtpl->assign('TAG', [
+            'id' => $id,
+            'title' => $title,
+            'selected' => $id == $array_search['tagids'] ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.tag');
+    }
+}
+
+// Xuất danh sách
 foreach ($list as $row) {
     $row['name_cat'] = isset($array_catids[$row['catids']]) ? $array_catids[$row['catids']] : '';
     $row['name_author'] = isset($array_authors[$row['author_id']]) ? $array_authors[$row['author_id']] : '';

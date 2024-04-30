@@ -105,6 +105,7 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
     if (empty($array['content'])) {
         $error[] = $nv_Lang->getModule('content_error_empty');
     }
+
     if (empty($error)) {
         if (!$id) {
             $sql = "INSERT INTO " . NV_PREFIXLANG . "_" . $module_data . "

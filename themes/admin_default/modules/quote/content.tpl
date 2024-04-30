@@ -74,7 +74,8 @@
                     <!-- END: btn_edit -->
                     <a href="{URL_BACK}" class="btn btn-default">
                         <i class="fa fa-reply"></i>
-                        {LANG.back}</a>
+                        {LANG.back}
+                    </a>
                 </div>
             </div>
         </form>
@@ -167,7 +168,11 @@
 
 <script>
     $(document).ready(function() {
-        $('select').select2();
+        $('select').select2({
+            placeholder: '{LANG.please_select}',
+            tags: true,
+            autoClear: true,
+        });
     });
 </script>
 <script>

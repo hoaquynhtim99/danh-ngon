@@ -81,6 +81,7 @@ if ($nv_Request->get_title('save_tag','post, get') === NV_CHECK_SESSION) {
     $data['id'] = $nv_Request->get_int('id', 'post', 0);
     $data['title'] = $nv_Request->get_title('title', 'post', '');
     $data['alias'] = $nv_Request->get_title('alias', 'post', '');
+    $array['alias'] = empty($array['alias']) ? change_alias($array['title']) : change_alias($array['alias']);
     $data['keywords'] = $nv_Request->get_title('keywords', 'post', '');
     $data['description'] = $nv_Request->get_editor('description', '', NV_ALLOWED_HTML_TAGS);
     $data['image'] = $nv_Request->get_title('image', 'post', '');
@@ -91,13 +92,6 @@ if ($nv_Request->get_title('save_tag','post, get') === NV_CHECK_SESSION) {
             'mess' => $nv_Lang->getModule('error_required_title_cats')
         ];
         nv_jsonOutput($res);
-    }
-
-    if (empty($data['alias'])) {
-        $res = [
-            'res' => 'error',
-            'mess' => $nv_Lang->getModule('error_required_alias')
-        ];
     }
 
     $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE alias = :alias AND id != :id";

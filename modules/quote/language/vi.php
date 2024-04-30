@@ -46,7 +46,7 @@ $lang_module['from_day'] = 'Từ ngày';
 $lang_module['to_day'] = 'Đến ngày';
 $lang_module['is_required'] = 'là mục bắt buộc';
 $lang_module['confirm_delete'] = 'Bạn có chắc chắn muốn xóa không?';
-$lang_module['please_select'] = 'Vui lòng chọn';
+$lang_module['please_select'] = 'Tất cả';
 
 $lang_module['goto'] = 'Chuyển đến';
 $lang_module['page'] = 'Trang %s';
@@ -138,5 +138,15 @@ $lang_module['add_tags_all'] = 'Thêm nhiều tag';
 $lang_module['note_tags'] = 'Nhập mỗi tag trên một dòng hoặc phân cách bằng dấu phẩy';
 $lang_module['error_required_alias'] = 'Lỗi: Bạn cần nhập liên kết tĩnh';
 
+$lang_module['import'] = 'Nhập xuất excel';
+$lang_module['excel_download_template'] = 'Tải mẫu';
+$lang_module['excel_note_template'] = 'Nhấp nút bên dưới để tải về mẫu excel, nhập liệu đúng theo mẫu đó. Yêu cầu không được thêm bớt, thay đổi thứ tự các cột';
+$lang_module['excel_export'] = 'Xuất excel';
+$lang_module['excel_import'] = 'Nhập excel';
+$lang_module['belong_cat'] = 'Thuộc danh mục';
+$lang_module['belong_author'] = 'Thuộc tác giả';
+$lang_module['belong_tag'] = 'Thuộc tag';
+$lang_module['excel_truncate'] = 'Xóa toàn bộ danh ngôn trước khi nhập';
+$lang_module['excel_error_nofile'] = 'Lỗi: Bạn cần chọn file excel';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';

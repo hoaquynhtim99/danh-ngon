@@ -4,44 +4,72 @@
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/locales/bootstrap-datepicker.{NV_LANG_INTERFACE}.min.js"></script>
 <div class="row">
-    <div class="col-lg-18">
         <form method="get" action="{NV_BASE_ADMINURL}index.php">
             <input type="hidden" name="{NV_LANG_VARIABLE}" value="{NV_LANG_DATA}">
             <input type="hidden" name="{NV_NAME_VARIABLE}" value="{MODULE_NAME}">
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-md-4">
                     <div class="form-group">
-                        <label for="element_q">{LANG.search_keywords}:</label>
-                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.enter_search_key}">
+                        <label for="element_q">{LANG.search_keywords}</label>
+                        <input type="text" class="form-control" id="element_q" name="q" value="{SEARCH.q}" placeholder="{LANG.search_keywords}">
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="element_q">{LANG.belong_cat}</label>
+                        <select class="form-control" id="element_catids" name="catids" value="{SEARCH.catids}" placeholder="{LANG.search_keywords}">
+                            <option value="0">{LANG.please_select}</option>
+                            <!-- BEGIN: cat -->
+                            <option value="{CAT.id}"{CAT.selected}>{CAT.title}</option>
+                            <!-- END: cat -->
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="element_q">{LANG.belong_author}</label>
+                        <select class="form-control"  name="author_id" value="{SEARCH.author_id}" placeholder="{LANG.search_keywords}">
+                            <option value="0">{LANG.please_select}</option>
+                            <!-- BEGIN: author -->
+                            <option value="{AUTHOR.id}"{AUTHOR.selected}>{AUTHOR.name_author}</option>
+                            <!-- END: author -->
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="element_q">{LANG.belong_tag}:</label>
+                        <select class="form-control"  name="tagids" value="{SEARCH.tagids}" placeholder="{LANG.search_keywords}">
+                            <option value="0">{LANG.please_select}</option>
+                            <!-- BEGIN: tag -->
+                            <option value="{TAG.id}"{TAG.selected}>{TAG.title}</option>
+                            <!-- END: tag -->
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="element_from">{LANG.from_day}:</label>
                         <input type="text" class="form-control datepicker" id="element_from" name="f" value="{SEARCH.from}" placeholder="dd-mm-yyyy" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-md-4">
                     <div class="form-group">
                         <label for="element_to">{LANG.to_day}:</label>
                         <input type="text" class="form-control datepicker" id="element_to" name="t" value="{SEARCH.to}" placeholder="dd-mm-yyyy" autocomplete="off">
                     </div>
                 </div>
-                <div class="col-sm-6">
+            </div>
+            <div class="row">
+                <div class="col-md-12">
                     <div class="form-group">
-                        <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
                         <button class="btn btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i> {GLANG.search}</button>
+                        <a href="{LINK_ADD_NEW}" class="btn btn-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.content}</a>
+                        <a href="{LINK_IMPORT}" class="btn btn-default"><i class="fa fa-cloud-upload" aria-hidden="true"></i> {LANG.import}</a>
                     </div>
                 </div>
             </div>
         </form>
-    </div>
-    <div class="col-lg-6">
-        <div class="form-group text-right">
-            <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
-            <a href="{LINK_ADD_NEW}" class="btn btn-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.content}</a>
-        </div>
-    </div>
 </div>
 <script type="text/javascript">
 $(document).ready(function() {
