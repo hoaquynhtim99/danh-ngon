@@ -39,7 +39,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="element_q">{LANG.belong_tag}:</label>
-                        <select class="form-control"  name="tagids" value="{SEARCH.tagids}" placeholder="{LANG.search_keywords}">
+                        <select class="form-control"  name="tagids[]" value="{SEARCH.tagids}" placeholder="{LANG.search_keywords}">
                             <option value="0">{LANG.please_select}</option>
                             <!-- BEGIN: tag -->
                             <option value="{TAG.id}"{TAG.selected}>{TAG.title}</option>
@@ -118,7 +118,10 @@ $(document).ready(function() {
                     <td class="text-nowrap">{ROW.addtime}</td>
                     <td class="text-nowrap">{ROW.updatetime}</td>
                     <td class="text-center">
-                        <input name="status" id="change_status{ROW.id}" value="1" type="checkbox"{ROW.status_render} onclick="nv_change_content_status('{ROW.id}', '{NV_CHECK_SESSION}');">
+                        <label class="switch">
+                            <input name="status" id="change_status{ROW.id}" value="1" type="checkbox"{ROW.status_render} onclick="nv_change_content_status('{ROW.id}', '{NV_CHECK_SESSION}');">
+                            <span class="slider round"></span>
+                        </label>
                     </td>
                     <td class="text-center text-nowrap">
                         <a href="{ROW.url_edit}" class="btn btn-xs btn-default"><i class="fa fa-edit"></i> {GLANG.edit}</a>

@@ -81,7 +81,7 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
     $array['catids'] = $nv_Request->get_int('catids', 'post', 0);
     $array['author_id'] = $nv_Request->get_int('author_id', 'post', 0);
     $array['tagids'] = $nv_Request->get_typed_array('tagids', 'post', 'int', []);
-    $array['tagids'] = !empty($array_tagids) ? implode(',', $array_tagids) : '';
+    $array['tagids'] = !empty($array['tagids']) ? implode(',', $array['tagids']) : '';
     $array['truncate_data'] = (int) $nv_Request->get_bool('truncate_data', 'post', false);
 
     if (isset($_FILES['import_file']) and is_uploaded_file($_FILES['import_file']['tmp_name'])) {
@@ -115,7 +115,7 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
 
             $item['stt'] = trim($sheet->getCell('A' . $read_row)->getCalculatedValue());
             $item['content'] = trim($sheet->getCell('B' . $read_row)->getCalculatedValue());
-            $item['keywords'] = trim($sheet->getCell('C' . $read_row)->getCalculatedValue());
+            $item['keywords'] = trim($sheet->getCell('C' . $read_row)->getCalculatedValue() ?? '');
             $item['catids'] = $array['catids'];
             $item['author_id'] = $array['author_id'];
             $item['tagids'] = $array['tagids'];
@@ -159,6 +159,7 @@ if (!empty($array_catids)) {
         $xtpl->assign('CAT', [
             'key' => $catid,
             'title' => $title,
+            'selected' => $array['catids'] == $catid ? ' selected="selected"' : '',
         ]);
         $xtpl->parse('main.cat');
     }
@@ -169,6 +170,7 @@ if (!empty($array_authors)) {
         $xtpl->assign('AUTHOR', [
             'key' => $author_id,
             'name' => $name_author,
+            'selected' => $array['author_id'] == $author_id ? ' selected="selected"' : '',
         ]);
         $xtpl->parse('main.author');
     }
@@ -179,6 +181,7 @@ if (!empty($array_tags)) {
         $xtpl->assign('TAG', [
             'key' => $tag_id,
             'title' => $title,
+            'selected' => in_array($tag_id, explode(',', $array['tagids'])) ? ' selected="selected"' : '',
         ]);
         $xtpl->parse('main.tag');
     }

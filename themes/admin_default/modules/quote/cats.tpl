@@ -44,7 +44,10 @@ $(document).ready(function() {
                     <div><small class="text-muted">{ROW.description}</small></div>
                 </td>
                 <td class="text-center">
-                    <input name="status" id="change_status{ROW.id}" value="1" type="checkbox"{ROW.status_render} onclick="nv_change_cats_status('{ROW.id}', '{NV_CHECK_SESSION}');">
+                    <label class="switch">
+                        <input type="checkbox" name="status" id="change_status_{ROW.id}" value="1" {ROW.status_render} onclick="nv_change_cats_status('{ROW.id}', '{NV_CHECK_SESSION}');">
+                        <span class="slider round"></span>
+                    </label>
                 </td>
                 <td class="text-center text-nowrap">
                     <a class="btn btn-sm btn-default" href="{ROW.url_edit}"><i class="fa fa-edit"></i> {GLANG.edit}</a>

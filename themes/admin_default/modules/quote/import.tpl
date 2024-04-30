@@ -23,7 +23,7 @@
                     <select class="form-control" name="catids">
                         <option value="0" selected disabled>{LANG.please_select}</option>
                         <!-- BEGIN: cat -->
-                        <option value="{CAT.key}">{CAT.title}</option>
+                        <option value="{CAT.key}"{CAT.selected}>{CAT.title}</option>
                         <!-- END: cat -->
                     </select>
                 </div>
@@ -33,7 +33,7 @@
                     <select class="form-control" name="author_id">
                         <option value="0" selected disabled>{LANG.please_select}</option>
                         <!-- BEGIN: author -->
-                        <option value="{AUTHOR.key}">{AUTHOR.name}</option>
+                        <option value="{AUTHOR.key}"{AUTHOR.selected}>{AUTHOR.name}</option>
                         <!-- END: author -->
                     </select>
                 </div>
@@ -42,7 +42,7 @@
                 <div class="col-lg-6">
                     <select class="form-control" name="tagids[]" multiple data-placeholder="{LANG.please_select}">
                         <!-- BEGIN: tag -->
-                        <option value="{TAG.key}">{TAG.title}</option>
+                        <option value="{TAG.key}"{TAG.selected}>{TAG.title}</option>
                         <!-- END: tag -->
                     </select>
                 </div>
@@ -66,4 +66,5 @@
         });
     });
 </script>
+
 <!-- END: main -->
