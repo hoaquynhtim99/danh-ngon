@@ -21,7 +21,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use NukeViet\Files\Download;
 
-$page_title = $nv_Lang->getModule('import');
+$page_title = $nv_Lang->getModule('import_quote');
 // Tạo file mẫu
 if ($nv_Request->get_title('template', 'get', '') === NV_CHECK_SESSION) {
     $file = NV_ROOTDIR . '/modules/' . $module_file . '/excel/excel-template.xlsx';

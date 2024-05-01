@@ -63,6 +63,7 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
 $page_title = $nv_Lang->getModule('main');
 
 $per_page = 20;
+$error = [];
 $page = $nv_Request->get_absint('page', 'get', 1);
 $base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name;
 
@@ -142,6 +143,10 @@ if (!empty($array_search['tagids'])) {
     $where[] = "tagids LIKE '%" . $array_search['tagids'] . "%'";
 }
 
+if ($array_search['from'] > $array_search['to']) {
+    $error[] = $nv_Lang->getModule('error_date');
+}
+
 if (!empty($array_search['from'])) {
     $base_url .= '&amp;f=' . nv_date('d-m-Y', $array_search['from']);
     $where[] = "addtime>=" . $array_search['from'];
@@ -191,6 +196,7 @@ while ($row = $result->fetch()) {
     $list[] = $row;
     $catIDs[] = $row['catids'];
     $author_ids[] = $row['author_id'];
+    $tag_ids[] = explode(',', $row['tagids']);
 }
 
 if (!empty($catIDs)) {
@@ -205,6 +211,15 @@ if (!empty($author_ids)) {
     $result = $db->query($db->sql());
     while ($row = $result->fetch()) {
         $array_authors[$row['id']] = $row['name_author'];
+    }
+}
+
+if (!empty($tag_ids)) {
+    $tag_ids = array_map('intval', array_unique(array_merge(...$tag_ids)));
+    $db->sqlreset()->select('id, title')->from(NV_PREFIXLANG . '_' . $module_data . '_tags')->where('id IN (' . implode(',', $tag_ids) . ')');
+    $result = $db->query($db->sql());
+    while ($row = $result->fetch()) {
+        $array_tag[$row['id']] = $row['title'];
     }
 }
 
@@ -259,8 +274,19 @@ if (!empty($array_tags)) {
 
 // Xuất danh sách
 foreach ($list as $row) {
+    $row['title'] = nv_clean60($row['content'], 50);
     $row['name_cat'] = isset($array_catids[$row['catids']]) ? $array_catids[$row['catids']] : '';
     $row['name_author'] = isset($array_authors[$row['author_id']]) ? $array_authors[$row['author_id']] : '';
+    if (isset($row['tagids'])) {
+        $tag_ids = explode(',', $row['tagids']);
+        $tag_names = [];
+        foreach ($tag_ids as $v) {
+            if (isset($array_tag[$v])) {
+                $tag_names[] = $array_tag[$v];
+            }
+        }
+        $row['name_tags'] = implode(', ', $tag_names);
+    }
     $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=content&amp;id=' . $row['id'];
     $row['status_render'] = $row['status'] ? ' checked="checked"' : '';
     $row['addtime'] = nv_date('d/m/Y H:i', $row['addtime']);
@@ -295,6 +321,11 @@ foreach ($order_fields as $field) {
 
     $xtpl->assign(strtoupper('URL_ORDER_' . $field), $url);
     $xtpl->assign(strtoupper('ICON_ORDER_' . $field), $icon);
+}
+
+if (!empty($error)) {
+    $xtpl->assign('ERROR', implode('<br />', $error));
+    $xtpl->parse('main.error');
 }
 
 $xtpl->parse('main');

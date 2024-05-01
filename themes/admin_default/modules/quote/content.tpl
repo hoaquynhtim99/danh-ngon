@@ -117,6 +117,7 @@
                                 <div class="col-sm-18 col-sm-offset-6">
                                     <input type="hidden" name="add_author" value="{NV_CHECK_SESSION}">
                                     <button type="button" class="btn btn-primary" id="submitAuthorBtn">{GLANG.submit}</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times text-danger"></i> {LANG.close}</button>
                                 </div>
                             </div>
                         </form>

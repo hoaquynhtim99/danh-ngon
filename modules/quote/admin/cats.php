@@ -195,6 +195,20 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
 
 $array['description'] = nv_br2nl($array['description']);
 
+$perpage = 10;
+$base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op;
+$page = $nv_Request->get_int('page', 'get', 1);
+
+$db->sqlreset()->select('COUNT(*)')->from(NV_PREFIXLANG . '_' . $module_data . '_cats');
+$total = $db->query($db->sql())->fetchColumn();
+
+$db->select('*')->order('weight ASC')->limit($perpage)->offset(($page - 1) * $perpage);
+$result = $db->query($db->sql());
+$array_cats = [];
+while ($row = $result->fetch()) {
+    $array_cats[] = $row;
+}
+
 $xtpl = new XTemplate('cats.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
 $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
@@ -202,27 +216,31 @@ $xtpl->assign('CAPTION', $caption);
 $xtpl->assign('FORM_ACTION', $form_action);
 $xtpl->assign('DATA', $array);
 
-// Xuất danh sách
-$sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_cats ORDER BY weight ASC";
-$array_cats = $db->query($sql)->fetchAll();
-$num = sizeof($array_cats);
+if (!empty($array_cats)) {
+    foreach ($array_cats as $row) {
+        $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;id=' . $row['id'];
+        $row['status_render'] = empty($row['status']) ? '' : ' checked="checked"';
 
-foreach ($array_cats as $row) {
-    $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $op . '&amp;id=' . $row['id'];
-    $row['status_render'] = empty($row['status']) ? '' : ' checked="checked"';
+        for ($i = 1; $i <= $total; ++$i) {
+            $xtpl->assign('WEIGHT', [
+                'w' => $i,
+                'selected' => ($i == $row['weight']) ? ' selected="selected"' : ''
+            ]);
 
-    for ($i = 1; $i <= $num; ++$i) {
-        $xtpl->assign('WEIGHT', [
-            'w' => $i,
-            'selected' => ($i == $row['weight']) ? ' selected="selected"' : ''
-        ]);
+            $xtpl->parse('main.loop.weight');
+        }
 
-        $xtpl->parse('main.loop.weight');
+        $xtpl->assign('ROW', $row);
+        $xtpl->parse('main.loop');
     }
-
-    $xtpl->assign('ROW', $row);
-    $xtpl->parse('main.loop');
+    $generate_page = nv_generate_page($base_url, $total, $perpage, $page);
+    if (!empty($generate_page)) {
+        $xtpl->assign('GENERATE_PAGE', $generate_page);
+        $xtpl->parse('main.generate_page');
+    }
 }
+
+
 
 // Hiển thị lỗi
 if (!empty($error)) {

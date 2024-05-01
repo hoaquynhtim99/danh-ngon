@@ -91,6 +91,10 @@ if (!empty($array_search['q'])) {
     )";
 }
 
+if ($array_search['from'] > $array_search['to']) {
+    $error[] = $nv_Lang->getModule('error_date');
+}
+
 if (!empty($array_search['from'])) {
     $base_url .= '&amp;f=' . nv_date('d-m-Y', $array_search['from']);
     $where[] = "addtime>=" . $array_search['from'];

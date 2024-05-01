@@ -21,6 +21,7 @@ $lang_translator['langtype'] = 'lang_module';
 
 $lang_module['add'] = 'Thêm';
 $lang_module['back'] = 'Quay lại';
+$lang_module['close'] = 'Đóng';
 $lang_module['add_and_return'] = 'Lưu và quay lại';
 $lang_module['add_again'] ='Lưu và thêm tiếp';
 $lang_module['main'] = 'Danh sách danh ngôn';
@@ -137,8 +138,10 @@ $lang_module['search_note'] = 'Nhập từ khóa để tìm kiếm';
 $lang_module['add_tags_all'] = 'Thêm nhiều tag';
 $lang_module['note_tags'] = 'Nhập mỗi tag trên một dòng hoặc phân cách bằng dấu phẩy';
 $lang_module['error_required_alias'] = 'Lỗi: Bạn cần nhập liên kết tĩnh';
+$lang_module['name_tags'] = 'Tên tag';
 
-$lang_module['import'] = 'Nhập xuất excel';
+$lang_module['import'] = 'Nhập từ excel';
+$lang_module['import_quote'] = 'Nhập danh ngôn từ excel';
 $lang_module['excel_download_template'] = 'Tải mẫu';
 $lang_module['excel_note_template'] = 'Nhấp nút bên dưới để tải về mẫu excel, nhập liệu đúng theo mẫu đó. Yêu cầu không được thêm bớt, thay đổi thứ tự các cột';
 $lang_module['excel_export'] = 'Xuất excel';
@@ -148,5 +151,6 @@ $lang_module['belong_author'] = 'Thuộc tác giả';
 $lang_module['belong_tag'] = 'Thuộc tag';
 $lang_module['excel_truncate'] = 'Xóa toàn bộ danh ngôn trước khi nhập';
 $lang_module['excel_error_nofile'] = 'Lỗi: Bạn cần chọn file excel';
+$lang_module['error_date'] = 'Lỗi: Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';

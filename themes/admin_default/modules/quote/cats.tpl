@@ -56,6 +56,15 @@ $(document).ready(function() {
             </tr>
             <!-- END: loop -->
         </tbody>
+        <!-- BEGIN: generate_page -->
+        <tfoot>
+        <tr>
+            <td colspan="6" class="text-center">
+                {GENERATE_PAGE}
+            </td>
+        </tr>
+        </tfoot>
+        <!-- END: generate_page -->
     </table>
 </div>
 

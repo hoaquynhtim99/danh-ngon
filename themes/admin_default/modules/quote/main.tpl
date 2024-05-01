@@ -3,6 +3,9 @@
 <link type="text/css" href="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/locales/bootstrap-datepicker.{NV_LANG_INTERFACE}.min.js"></script>
+<!-- BEGIN: error -->
+<div class="alert alert-danger">{ERROR}</div>
+<!-- END: error -->
 <div class="row">
         <form method="get" action="{NV_BASE_ADMINURL}index.php">
             <input type="hidden" name="{NV_LANG_VARIABLE}" value="{NV_LANG_DATA}">
@@ -39,7 +42,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="element_q">{LANG.belong_tag}:</label>
-                        <select class="form-control"  name="tagids[]" value="{SEARCH.tagids}" placeholder="{LANG.search_keywords}">
+                        <select class="form-control"  name="tagids"  placeholder="{LANG.search_keywords}">
                             <option value="0">{LANG.please_select}</option>
                             <!-- BEGIN: tag -->
                             <option value="{TAG.id}"{TAG.selected}>{TAG.title}</option>
@@ -96,6 +99,7 @@ $(document).ready(function() {
                         <a href="{URL_ORDER_CONTENT}">{ICON_ORDER_TITLE} {LANG.title}</a>
                     <th style="width: 15%" class="text-nowrap">{LANG.name_authour}</th>
                     <th style="width: 15%" class="text-nowrap">{LANG.cats_title}</th>
+                    <th style="width: 15%" class="text-nowrap">{LANG.name_tags}<th
                     <th style="width: 15%" class="text-nowrap">
                         <a href="{URL_ORDER_ADDTIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
                     </th>
@@ -112,9 +116,29 @@ $(document).ready(function() {
                     <td class="text-center">
                         <input type="checkbox" onclick="nv_UncheckAll(this.form, 'idcheck[]', 'check_all[]', this.checked);" value="{ROW.id}" name="idcheck[]">
                     </td>
-                    <td><strong>{ROW.content}</strong></td>
+                    <td>
+                        <div style="margin-bottom: 5px !important;">
+                            <span class="label label-info">{ROW.keywords}</span>
+                        </div>
+                        <a href="#md-content-{ROW.id}" data-toggle="modal">{ROW.title}</a>
+                        <div class="modal fade" tabindex="-1" role="dialog" id="md-content-{ROW.id}">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        {ROW.content}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times text-danger"></i> {LANG.close}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
                     <td class="text-nowrap">{ROW.name_author}</td>
                     <td class="text-nowrap">{ROW.name_cat}</td>
+                    <td class="text-nowrap">{ROW.name_tags}</td>
                     <td class="text-nowrap">{ROW.addtime}</td>
                     <td class="text-nowrap">{ROW.updatetime}</td>
                     <td class="text-center">

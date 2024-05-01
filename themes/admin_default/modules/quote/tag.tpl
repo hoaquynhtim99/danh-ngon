@@ -150,6 +150,7 @@
                             <button type="button" class="btn btn-primary" id="submitTagBtn">
                                 <i class="fa fa-floppy-o"></i>
                                 {GLANG.submit}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times text-danger"></i> {LANG.close}</button>
                         </div>
                     </div>
 
@@ -178,6 +179,7 @@
                             <button type="button" class="btn btn-primary" id="submitTagBtnAll">
                                 <i class="fa fa-floppy-o"></i>
                                 {GLANG.submit}</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times text-danger"></i> {LANG.close}</button>
                         </div>
                     </div>
                 </div>
