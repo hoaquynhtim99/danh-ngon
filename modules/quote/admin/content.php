@@ -39,7 +39,7 @@ $array = $error = [];
 $is_sumit_form = $is_edit = false;
 $currentpath = NV_UPLOADS_DIR . '/' . $module_upload;
 $id = $nv_Request->get_int('id', 'post,get', 0);
-$formmodal = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=authour';
+$formmodal = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=author';
 if (!empty($id)) {
     $sql = 'SELECT * FROM ' . NV_PREFIXLANG . '_' . $module_data . ' WHERE id = ' . $id;
     $result = $db->query($sql);
@@ -104,6 +104,14 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
 
     if (empty($array['content'])) {
         $error[] = $nv_Lang->getModule('content_error_empty');
+    }
+
+    $sql = "SELECT content FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE content = :content";
+    $sth = $db->prepare($sql);
+    $sth->bindParam(':content', $array['content'], PDO::PARAM_STR);
+    $sth->execute();
+    if ($sth->fetchColumn()) {
+        $error[] = $nv_Lang->getModule('content_error_duplicate');
     }
 
     if (empty($error)) {
@@ -206,13 +214,25 @@ if ($nv_Request->get_title('add_author','post,get') === NV_CHECK_SESSION) {
     $sth->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
     $sth->bindValue(':addtime', NV_CURRENTTIME);
     $sth->execute();
-    nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Author_modal', ' ', $admin_info['admin_id']);
-
-    $res = [
-        'res' => 'success',
-        'mess' => $nv_Lang->getModule('author_add_success')
-    ];
-    nv_jsonOutput($res);
+    $new_id = $db->lastInsertId();
+    if (!empty($new_id)) {
+        nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Author_modal', ' ', $admin_info['admin_id']);
+        $res = [
+            'res' => 'success',
+            'mess' => $nv_Lang->getModule('author_add_success'),
+            'author' => [
+                'id' => $new_id,
+                'name' => $array['name_author']
+            ]
+        ];
+        nv_jsonOutput($res);
+    } else {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('errorsave')
+        ];
+        nv_jsonOutput($res);
+    }
 }
 
 $xtpl = new XTemplate('content.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);

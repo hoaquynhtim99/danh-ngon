@@ -49,7 +49,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
 $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_" . $module_data . "_authors (
   id mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   name_author varchar(190) NOT NULL DEFAULT '' COMMENT 'Tên tác giả',
-  alias varchar(190) COMMENT 'Liên kết tĩnh không trùng',
+  alias varchar(190) NOT NULL COMMENT 'Liên kết tĩnh không trùng',
   description text  COMMENT 'Mô tả ngắn gọn',
   bodyhtml longtext  COMMENT 'Chi tiết',
   image varchar(255) NOT NULL DEFAULT '' COMMENT 'Ảnh mô tả',

@@ -3,6 +3,8 @@
 <link type="text/css" href="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/locales/bootstrap-datepicker.{NV_LANG_INTERFACE}.min.js"></script>
+<link rel="stylesheet" href="{ASSETS_STATIC_URL}/js/select2/select2.min.css">
+<script src="{ASSETS_STATIC_URL}/js/select2/select2.min.js"></script>
 <!-- BEGIN: error -->
 <div class="alert alert-danger">{ERROR}</div>
 <!-- END: error -->
@@ -97,7 +99,7 @@ $(document).ready(function() {
                     </th>
                     <th style="width: 20%" class="text-nowrap">
                         <a href="{URL_ORDER_CONTENT}">{ICON_ORDER_TITLE} {LANG.title}</a>
-                    <th style="width: 15%" class="text-nowrap">{LANG.name_authour}</th>
+                    <th style="width: 15%" class="text-nowrap">{LANG.name_author}</th>
                     <th style="width: 15%" class="text-nowrap">{LANG.cats_title}</th>
                     <th style="width: 15%" class="text-nowrap">{LANG.name_tags}<th
                     <th style="width: 15%" class="text-nowrap">
@@ -142,10 +144,7 @@ $(document).ready(function() {
                     <td class="text-nowrap">{ROW.addtime}</td>
                     <td class="text-nowrap">{ROW.updatetime}</td>
                     <td class="text-center">
-                        <label class="switch">
-                            <input name="status" id="change_status{ROW.id}" value="1" type="checkbox"{ROW.status_render} onclick="nv_change_content_status('{ROW.id}', '{NV_CHECK_SESSION}');">
-                            <span class="slider round"></span>
-                        </label>
+                        <input name="status" id="change_status{ROW.id}" value="1" type="checkbox"{ROW.status_render} onclick="nv_change_content_status('{ROW.id}', '{NV_CHECK_SESSION}');">
                     </td>
                     <td class="text-center text-nowrap">
                         <a href="{ROW.url_edit}" class="btn btn-xs btn-default"><i class="fa fa-edit"></i> {GLANG.edit}</a>
@@ -174,4 +173,9 @@ $(document).ready(function() {
         <button type="button" class="btn btn-primary" onclick="nv_content_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
     </div>
 </form>
+<script>
+    $(document).ready(function() {
+        $('select').select2();
+    });
+</script>
 <!-- END: main -->

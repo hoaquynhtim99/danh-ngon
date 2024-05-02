@@ -27,7 +27,7 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
     $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE id = " . $id;
     $db->query($sql);
 
-    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_AUTHOUR', json_encode($array), $admin_info['admin_id']);
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_author', json_encode($array), $admin_info['admin_id']);
     $nv_Cache->delMod($module_name);
 
     nv_htmlOutput("OK");
@@ -52,15 +52,15 @@ if ($nv_Request->get_title('delete_all', 'post', '') === NV_CHECK_SESSION) {
             $db->query($sql);
         }
     }
-    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_AUTHOUR_ALL', json_encode($array), $admin_info['admin_id']);
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_author_ALL', json_encode($array), $admin_info['admin_id']);
     $nv_Cache->delMod($module_name);
     nv_htmlOutput("OK");
 }
 
-$page_title = $nv_Lang->getModule('authour_admin');
+$page_title = $nv_Lang->getModule('author_admin');
 $per_page = 20;
 $page = $nv_Request->get_absint('page', 'get', 1);
-$base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=authour';
+$base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=author';
 
 // Phần tìm kiếm
 $array_search = [];
@@ -82,6 +82,7 @@ if (preg_match('/^([0-9]{1,2})\-([0-9]{1,2})\-([0-9]{4})$/', $array_search['to']
 
 $db->sqlreset()->select('COUNT(*)')->from(NV_PREFIXLANG . '_' . $module_data . '_authors');
 $where = [];
+$error = [];
 
 if (!empty($array_search['q'])) {
     $base_url .= '&amp;q=' . urlencode($array_search['q']);
@@ -134,7 +135,7 @@ $total = $db->query($db->sql())->fetchColumn();
 if (!empty($array_order['field']) and !empty($array_order['value'])) {
     $order = $array_order['field'] . ' ' . $array_order['value'];
 } else {
-    $order = 'id ASC';
+    $order = 'id DESC';
 }
 $db->select('*')
     ->order($order)
@@ -142,7 +143,7 @@ $db->select('*')
     ->offset(($page - 1) * $per_page);
 $result = $db->query($db->sql());
 
-$xtpl = new XTemplate('authour.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
+$xtpl = new XTemplate('author.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
 $xtpl->assign('GLANG', \NukeViet\Core\Language::$lang_global);
 $xtpl->assign('MODULE_NAME', $module_name);
@@ -199,6 +200,11 @@ foreach ($order_fields as $field) {
 
     $xtpl->assign(strtoupper('URL_ORDER_' . $field), $url);
     $xtpl->assign(strtoupper('ICON_ORDER_' . $field), $icon);
+}
+
+if (!empty($error)) {
+    $xtpl->assign('ERROR', implode('<br />', $error));
+    $xtpl->parse('main.error');
 }
 
 $xtpl->parse('main');

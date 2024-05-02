@@ -72,7 +72,7 @@ if ($nv_Request->get_title('delete_all', 'post', '') === NV_CHECK_SESSION) {
             $db->query($sql);
         }
     }
-    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_AUTHOUR_ALL', json_encode($array), $admin_info['admin_id']);
+    nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_author_ALL', json_encode($array), $admin_info['admin_id']);
     $nv_Cache->delMod($module_name);
     nv_htmlOutput("OK");
 }
@@ -147,9 +147,23 @@ if ($nv_Request->get_title('save_tag_all', 'post')) {
         ];
         nv_jsonOutput($res);
     }
+
+    $uniqueTitles = [];
     foreach ($data['title'] as $title) {
         $title = trim($title);
         $alias = strtolower(change_alias($title));
+
+        // Kiểm tra xem tag với cùng title đã tồn tại chưa
+        $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE title = :title");
+        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+        $stmt->execute();
+
+        if ($stmt->fetchColumn()) {
+            continue; // Bỏ qua nếu đã tồn tại
+        }
+
+        $uniqueTitles[] = $title;
+        // Kiểm tra alias và xử lý nếu cần
         $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE alias = :alias");
         $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
         $stmt->execute();
@@ -160,29 +174,28 @@ if ($nv_Request->get_title('save_tag_all', 'post')) {
             $alias = $alias . '-' . $weight;
         }
 
-        // Kiểm tra trùng title
-        $stmt = $db->prepare("SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_tags WHERE title = :title");
-        $stmt->bindParam(':title', $title, PDO::PARAM_STR);
-        $stmt->execute();
-        if ($stmt->fetchColumn()) {
-            continue;
-        }
-
+        // Chèn tag mới
         $stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_tags (title, alias, addtime) VALUES (:title, :alias, :addtime)');
         $stmt->bindParam(':title', $title, PDO::PARAM_STR);
         $stmt->bindParam(':alias', $alias, PDO::PARAM_STR);
         $stmt->bindValue(':addtime', NV_CURRENTTIME);
         $stmt->execute();
         $titleTags[] = $title;
-        nv_insert_logs(NV_LANG_DATA, $module_name, 'Add Tag ALL', ' ', $admin_info['userid']);
-        $nv_Cache->delMod($module_name);
+    }
+
+    if (empty($uniqueTitles)) {
+        $res = [
+            'res' => 'error',
+            'mess' => $nv_Lang->getModule('error_duplicate_tag')
+        ];
+    } else {
         $res = [
             'res' => 'success',
             'mess' => $nv_Lang->getModule('function_tag_success') . ' ' . implode(', ', $titleTags)
         ];
     }
-    nv_jsonOutput($res);
 
+    nv_jsonOutput($res);
 }
 
 $array = [];
@@ -211,7 +224,7 @@ if (!empty($where)) {
 
 $total = $db->query($db->sql())->fetchColumn();
 
-$db->select('*')->order('id ASC')
+$db->select('*')->order('id DESC')
     ->limit($per_page)
     ->offset(($page - 1) * $per_page);
 $result = $db->query($db->sql());

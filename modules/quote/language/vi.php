@@ -104,23 +104,23 @@ $lang_module['cats_error_exists'] = 'Lỗi: Tên danh mục này đã có';
 
 $lang_module['main_list'] = 'Danh sách danh ngôn';
 
-$lang_module['authour_admin'] = 'Quản lý Tác giả';
-$lang_module['list_authour'] = 'Danh sách tác giả';
-$lang_module['add_authour'] = 'Thêm tác giả';
-$lang_module['edit_authour'] = 'Sửa tác giả';
+$lang_module['author_admin'] = 'Quản lý Tác giả';
+$lang_module['list_author'] = 'Danh sách tác giả';
+$lang_module['add_author'] = 'Thêm tác giả';
+$lang_module['edit_author'] = 'Sửa tác giả';
 $lang_module['cats_id'] = 'Chọn danh mục';
-$lang_module['name_authour'] = 'Tên tác giả';
-$lang_module['description_authour'] = 'Mô tả ngắn gọn về tác giả';
-$lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
-$lang_module['image_authour'] = 'Ảnh đại diện';
+$lang_module['name_author'] = 'Tên tác giả';
+$lang_module['description_author'] = 'Mô tả ngắn gọn về tác giả';
+$lang_module['bodyhtml_author'] = 'Chi tiết về tác giả';
+$lang_module['image_author'] = 'Ảnh đại diện';
 $lang_module['select_image'] = 'Chưa chọn file nào';
 $lang_module['url_cancel'] = 'Hủy bỏ';
 $lang_module['error_required_catid'] = 'Lỗi: Bạn cần chọn danh mục';
 $lang_module['error_required_name_author'] = 'Lỗi: Bạn cần nhập tên tác giả';
 $lang_module['error_duplicate_name_author'] = 'Lỗi: Tên tác giả này đã có';
-$lang_module['description_authour'] = 'Mô tả ngắn gọn';
-$lang_module['bodyhtml_authour'] = 'Chi tiết về tác giả';
-$lang_module['image_authour'] = 'Ảnh đại diện';
+$lang_module['description_author'] = 'Mô tả ngắn gọn';
+$lang_module['bodyhtml_author'] = 'Chi tiết về tác giả';
+$lang_module['image_author'] = 'Ảnh đại diện';
 $lang_module['error_required_id'] = 'Lỗi: Bạn cần chọn id để xóa';
 $lang_module['confirm_delete_all'] = 'Bạn có chắc chắn muốn xóa những gì đã chọn không?';
 
@@ -152,5 +152,7 @@ $lang_module['belong_tag'] = 'Thuộc tag';
 $lang_module['excel_truncate'] = 'Xóa toàn bộ danh ngôn trước khi nhập';
 $lang_module['excel_error_nofile'] = 'Lỗi: Bạn cần chọn file excel';
 $lang_module['error_date'] = 'Lỗi: Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc';
+$lang_module['error_duplicate_tag'] = 'Lỗi: Tag này đã có';
+$lang_module['content_error_duplicate'] = 'Lỗi: Danh ngôn này đã có';
 
 $lang_module['quote_admin'] = 'Quản lý danh ngôn';

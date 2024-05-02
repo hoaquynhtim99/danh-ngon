@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_author_id">{LANG.name_authour} </label>
+                <label class="col-sm-6 control-label" for="element_author_id">{LANG.name_author} </label>
                 <div class="col-sm-18 col-lg-10">
                     <select class="form-control" name="author_id">
                         <option value="0" selected disabled>{LANG.please_select}</option>
@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addAuthorModal">
-                    {LANG.add_authour}
+                    {LANG.add_author}
                 </button>
             </div>
             <div class="form-group">
@@ -85,7 +85,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addAuthorModalLabel">{LANG.add_authour}</h5>
+                <h5 class="modal-title" id="addAuthorModalLabel">{LANG.add_author}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -95,7 +95,7 @@
                     <div class="panel-body">
                         <form id="addAuthorForm" class="form-horizontal">
                             <div class="form-group">
-                                <label class="col-sm-6 control-label" for="element_name_author">{LANG.name_authour}</label>
+                                <label class="col-sm-6 control-label" for="element_name_author">{LANG.name_author}</label>
                                 <div class="col-sm-18 col-lg-10">
                                     <input type="text" class="form-control" id="element_name_author" name="name_author" required>
                                 </div>
@@ -106,7 +106,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" id="element_alias" name="alias">
                                         <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button" onclick="get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')">
+                                    <button class="btn btn-default" type="button" onclick="get_author_alias('{DATA.id}', '{NV_CHECK_SESSION}')">
                                         <i class="fa fa-retweet"></i>
                                     </button>
                                 </span>
@@ -138,11 +138,20 @@
             }).done(function(response) {
                 if (response['res'] == 'success') {
                     $('#addAuthorModal').modal('hide');
-                    location.reload();
+
+                    var newAuthorId = response['author']['id'];
+                    var newAuthorName = response['author']['name'];
+                    var authorSelect = $('select[name="author_id"]');
+                    var newOption = $('<option>', {
+                        value: newAuthorId,
+                        text: newAuthorName
+                    });
+                    authorSelect.append(newOption);
+                    authorSelect.val(newAuthorId).trigger('change');
                 } else {
                     alert(response['mess']);
                 }
-            })
+            });
         });
     });
 </script>
@@ -153,7 +162,7 @@
         var autoAlias = true;
         $('#element_name_author').on('change', function() {
             if (autoAlias) {
-                get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')
+                get_author_alias('{DATA.id}', '{NV_CHECK_SESSION}')
             }
         });
         $('#element_alias').on('keyup', function() {

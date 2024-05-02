@@ -8,7 +8,7 @@
     <div class="panel-body">
         <form method="post" action="{FORM_ACTION}" class="form-horizontal">
             <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_name_author">{LANG.add_authour} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
+                <label class="col-sm-6 control-label" for="element_name_author">{LANG.add_author} <span class="fa-required text-danger">(<em class="fa fa-asterisk"></em>)</span>:</label>
                 <div class="col-sm-18 col-lg-10">
                     <input type="text" class="form-control" id="element_name_author" name="name_author" value="{DATA.name_author}">
                 </div>
@@ -19,7 +19,7 @@
                     <div class="input-group">
                         <input type="text" class="form-control" id="element_alias" name="alias" value="{DATA.alias}">
                         <span class="input-group-btn">
-                            <button class="btn btn-default" type="button" onclick="get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}')">
+                            <button class="btn btn-default" type="button" onclick="get_author_alias('{DATA.id}', '{NV_CHECK_SESSION}')">
                                 <i class="fa fa-retweet"></i>
                             </button>
                         </span>
@@ -33,13 +33,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_bodyhtml">{LANG.bodyhtml_authour}:</label>
+                <label class="col-sm-6 control-label" for="element_bodyhtml">{LANG.bodyhtml_author}:</label>
                 <div class="col-sm-18 col-lg-10">
                     <textarea class="form-control" rows="5" name="bodyhtml" id="element_bodyhtml">{DATA.bodyhtml}</textarea>
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-6 control-label" for="element_image">{LANG.image_authour}:</label>
+                <label class="col-sm-6 control-label" for="element_image">{LANG.image_author}:</label>
                 <div class="col-sm-18 col-lg-10">
                     <div class="input-group">
                         <input type="text" id="element_image" name="image" value="{DATA.image}" class="form-control">
@@ -79,7 +79,7 @@
         var autoAlias = true;
         $('#element_name_author').on('change', function() {
             if (autoAlias) {
-                get_authour_alias('{DATA.id}', '{NV_CHECK_SESSION}');
+                get_author_alias('{DATA.id}', '{NV_CHECK_SESSION}');
             }
         });
         $('#element_alias').on('keyup', function() {

@@ -3,6 +3,9 @@
 <link type="text/css" href="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="{NV_STATIC_URL}themes/default/images/{MODULE_FILE}/bootstrap-datepicker/locales/bootstrap-datepicker.{NV_LANG_INTERFACE}.min.js"></script>
+<!-- BEGIN: error -->
+<div class="alert-danger alert">{ERROR}</div>
+<!-- END: error -->
 <div class="row">
     <div class="col-lg-18">
         <form method="get" action="{NV_BASE_ADMINURL}index.php">
@@ -40,7 +43,7 @@
     <div class="col-lg-6">
         <div class="form-group text-right">
             <label class="visible-sm-block visible-md-block visible-lg-block">&nbsp;</label>
-            <a href="{LINK_ADD_NEW}" class="btn btn-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.add_authour}</a>
+            <a href="{LINK_ADD_NEW}" class="btn btn-success"><i class="fa fa-plus-circle" aria-hidden="true"></i> {LANG.add_author}</a>
         </div>
     </div>
 </div>
@@ -66,9 +69,9 @@ $(document).ready(function() {
                     <input name="check_all[]" type="checkbox" value="yes" onclick="nv_checkAll(this.form, 'idcheck[]', 'check_all[]',this.checked);">
                 </th>
                 <th style="width: 40%" class="text-nowrap">
-                    <a href="{URL_ORDER_NAME_AUTHOR}">{ICON_ORDER_TITLE} {LANG.title}</a>
+                    <a href="{URL_ORDER_NAME_AUTHOR}">{ICON_ORDER_TITLE} {LANG.name_author}</a>
                 </th>
-                <th style="width: 15%" class="text-center text-nowrap">{LANG.image_authour}</th>
+                <th style="width: 15%" class="text-center text-nowrap">{LANG.image_author}</th>
                 <th style="width: 15%" class="text-nowrap">
                     <a href="{URL_ORDER_ADDTIME}">{ICON_ORDER_ADD_TIME} {LANG.addtime}</a>
                 </th>
@@ -86,14 +89,14 @@ $(document).ready(function() {
                 </td>
                 <td><strong>{ROW.name_author}</strong></td>
                 <td class="text-center">
-                    <a  onclick="showAuthorImage('{ROW.image_upload}'); return false;" style="cursor: pointer;">
+                    <a onclick="showAuthorImage('{ROW.image_upload}'); return false;" style="cursor: pointer;" class="img__popup">
                         <img src="{ROW.image}" class="img-thumbnail img__author">
                     </a>
                 </td>
                 <td class="text-nowrap">{ROW.addtime}</td>
                 <td class="text-nowrap">{ROW.updatetime}</td>
                 <td class="text-center text-nowrap">
-                    <a href="{ROW.url_edit}" class="btn btn-xs btn-default"><i class="fa fa-edit"></i> {GLANG.edit}</a>
+                    <a href="{ROW.url_edit}" class="btn btn-sm btn-default"><i class="fa fa-edit"></i> {GLANG.edit}</a>
                     <a class="btn btn-sm btn-danger" href="javascript:void(0);" onclick="nv_delele_authors('{ROW.id}', '{NV_CHECK_SESSION}');"><i class="fa fa-trash"></i> {GLANG.delete}</a>
                 </td>
             </tr>
@@ -116,13 +119,14 @@ $(document).ready(function() {
                 <option value="delete_all">{GLANG.delete}</option>
             </select>
         </div>
-        <button type="button" class="btn btn-primary" onclick="nv_authour_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
+        <button type="button" class="btn btn-primary" onclick="nv_author_action(this.form, '{NV_CHECK_SESSION}', '{LANG.msgnocheck}')">{GLANG.submit}</button>
     </div>
 </form>
 <script>
     function showAuthorImage(imageSrc) {
-        var imageHtml = '<img src="' + imageSrc + '" class="img-fluid">';
-        modalShow('{LANG.image_authour}', imageHtml);
+        var imageHtml = '<img src="' + imageSrc + '" class="img-fluid img-responsive">';
+        modalShow('{LANG.image_author}', imageHtml);
     }
 </script>
+
 <!-- END: main -->
