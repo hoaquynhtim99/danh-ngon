@@ -95,7 +95,8 @@ if ($nv_Request->get_title('save', 'post', '') === NV_CHECK_SESSION) {
         $is_exists = true;
     }
 
-    $sql = "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE alias = :alias" . ($id ? ' AND id != ' . $id : '');            $stmt = $db->prepare($sql);
+    $sql = "SELECT COUNT(*) FROM " . NV_PREFIXLANG . "_" . $module_data . "_authors WHERE alias = :alias" . ($id ? ' AND id != ' . $id : '');
+    $stmt = $db->prepare($sql);
     $stmt->bindParam(':alias', $array['alias'], PDO::PARAM_STR);
     $stmt->execute();
     if ($stmt->fetchColumn()) {

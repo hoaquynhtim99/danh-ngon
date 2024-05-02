@@ -106,7 +106,7 @@ if ($nv_Request->get_title('save', 'post, get','') === NV_CHECK_SESSION) {
         $error[] = $nv_Lang->getModule('content_error_empty');
     }
 
-    $sql = "SELECT content FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE content = :content";
+    $sql = "SELECT content FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE content = :content " . ($id ? ' AND id != ' . $id : ''); ;
     $sth = $db->prepare($sql);
     $sth->bindParam(':content', $array['content'], PDO::PARAM_STR);
     $sth->execute();
