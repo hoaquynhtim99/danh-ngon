@@ -13,12 +13,13 @@ if (!defined('NV_IS_FILE_ADMIN')) {
     exit('Stop!!!');
 }
 
+$page_title = $nv_Lang->getModule('main');
 // Thay đổi hoạt động
 if ($nv_Request->get_title('changestatus', 'post', '') === NV_CHECK_SESSION) {
     $id = $nv_Request->get_int('id', 'post', 0);
 
     // Kiểm tra tồn tại
-    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_rows WHERE id=" . $id;
+    $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id = " . $id;
     $array = $db->query($sql)->fetch();
     if (empty($array)) {
         nv_htmlOutput('NO_' . $id);
@@ -26,7 +27,7 @@ if ($nv_Request->get_title('changestatus', 'post', '') === NV_CHECK_SESSION) {
 
     $status = empty($array['status']) ? 1 : 0;
 
-    $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . "_rows SET status = " . $status . " WHERE id = " . $id;
+    $sql = "UPDATE " . NV_PREFIXLANG . "_" . $module_data . " SET status = " . $status . " WHERE id = " . $id;
     $db->query($sql);
 
     nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_CHANGE_STATUS_CONTENT', json_encode($array), $admin_info['admin_id']);
@@ -44,13 +45,13 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
 
     foreach ($listid as $id) {
         // Kiểm tra tồn tại
-        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . "_rows WHERE id=" . $id;
+        $sql = "SELECT * FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id = " . $id;
         $array = $db->query($sql)->fetch();
         if (!empty($array)) {
             nv_insert_logs(NV_LANG_DATA, $module_name, 'LOG_DELETE_CONTENT', json_encode($array), $admin_info['admin_id']);
 
             // Xóa
-            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . "_rows WHERE id=" . $id;
+            $sql = "DELETE FROM " . NV_PREFIXLANG . "_" . $module_data . " WHERE id = " . $id;
             $db->query($sql);
         }
     }
@@ -62,14 +63,46 @@ if ($nv_Request->get_title('delete', 'post', '') === NV_CHECK_SESSION) {
 $page_title = $nv_Lang->getModule('main');
 
 $per_page = 20;
+$error = [];
 $page = $nv_Request->get_absint('page', 'get', 1);
 $base_url = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name;
+
+$db->sqlreset()
+    ->select('*')
+    ->from(NV_PREFIXLANG . '_' . $module_data . '_cats');
+$result = $db->query($db->sql());
+$array_catids = [];
+while ($row = $result->fetch()) {
+    $array_catids[$row['id']] = $row['title'];
+}
+
+$db->sqlreset()
+    ->select('*')
+    ->from(NV_PREFIXLANG . '_' . $module_data . '_authors');
+$result = $db->query($db->sql());
+$array_authors = [];
+while ($row = $result->fetch()) {
+    $array_authors[$row['id']] = $row['name_author'];
+}
+
+$db->sqlreset()
+    ->select('*')
+    ->from(NV_PREFIXLANG . '_' . $module_data . '_tags');
+$result = $db->query($db->sql());
+$array_tags = [];
+while ($row = $result->fetch()) {
+    $array_tags[$row['id']] = $row['title'];
+}
 
 // Phần tìm kiếm
 $array_search = [];
 $array_search['q'] = $nv_Request->get_title('q', 'get', '');
+$array_search['catids'] = $nv_Request->get_int('catids', 'get', 0);
+$array_search['author_id'] = $nv_Request->get_int('author_id', 'get', 0);
+$array_search['tagids'] = $nv_Request->get_int('tagids', 'get', 0);
 $array_search['from'] = $nv_Request->get_title('f', 'get', '');
 $array_search['to'] = $nv_Request->get_title('t', 'get', '');
+$array_search['catids'] = $nv_Request->get_int('catids', 'get', 0);
 
 // Xử lý dữ liệu tìm kiếm
 if (preg_match('/^([0-9]{1,2})\-([0-9]{1,2})\-([0-9]{4})$/', $array_search['from'], $m)) {
@@ -90,18 +123,37 @@ if (!empty($array_search['q'])) {
     $base_url .= '&amp;q=' . urlencode($array_search['q']);
     $dblikekey = $db->dblikeescape($array_search['q']);
     $where[] = "(
-        title LIKE '%" . $dblikekey . "%' OR
-        keywords LIKE '%" . $dblikekey . "%' OR
-        description LIKE '%" . $dblikekey . "%'
+        content LIKE '%" . $dblikekey . "%' OR
+        keywords LIKE '%" . $dblikekey . "%'
     )";
 }
+
+if (!empty($array_search['catids'])) {
+    $base_url .= '&amp;catids=' . $array_search['catids'];
+    $where[] = "catids=" . $array_search['catids'];
+}
+
+if (!empty($array_search['author_id'])) {
+    $base_url .= '&amp;author_id=' . $array_search['author_id'];
+    $where[] = "author_id=" . $array_search['author_id'];
+}
+
+if (!empty($array_search['tagids'])) {
+    $base_url .= '&amp;tagids=' . $array_search['tagids'];
+    $where[] = "tagids LIKE '%" . $array_search['tagids'] . "%'";
+}
+
+if ($array_search['from'] > $array_search['to']) {
+    $error[] = $nv_Lang->getModule('error_date');
+}
+
 if (!empty($array_search['from'])) {
     $base_url .= '&amp;f=' . nv_date('d-m-Y', $array_search['from']);
-    $where[] = "add_time>=" . $array_search['from'];
+    $where[] = "addtime>=" . $array_search['from'];
 }
 if (!empty($array_search['to'])) {
     $base_url .= '&amp;t=' . nv_date('d-m-Y', $array_search['to']);
-    $where[] = "add_time<=" . $array_search['to'];
+    $where[] = "addtime<=" . $array_search['to'];
 }
 
 // Phần sắp xếp
@@ -114,7 +166,7 @@ if ($page > 1) {
 }
 
 // Định nghĩa các field và các value được phép sắp xếp
-$order_fields = ['title', 'add_time', 'edit_time'];
+$order_fields = ['content', 'addtime', 'updatetime'];
 $order_values = ['asc', 'desc'];
 
 if (!in_array($array_order['field'], $order_fields)) {
@@ -137,6 +189,39 @@ if (!empty($array_order['field']) and !empty($array_order['value'])) {
 }
 $db->select('*')->order($order)->limit($per_page)->offset(($page - 1) * $per_page);
 $result = $db->query($db->sql());
+$list = [];
+$catIDs = [];
+$author_ids = [];
+while ($row = $result->fetch()) {
+    $list[] = $row;
+    $catIDs[] = $row['catids'];
+    $author_ids[] = $row['author_id'];
+    $tag_ids[] = explode(',', $row['tagids']);
+}
+
+if (!empty($catIDs)) {
+    $db->sqlreset()->select('id, title')->from(NV_PREFIXLANG . '_' . $module_data . '_cats')->where('id IN (' . implode(',', $catIDs) . ')');
+    $result = $db->query($db->sql());
+    while ($row = $result->fetch()) {
+        $array_catids[$row['id']] = $row['title'];
+    }
+}
+if (!empty($author_ids)) {
+    $db->sqlreset()->select('id, name_author')->from(NV_PREFIXLANG . '_' . $module_data . '_authors')->where('id IN (' . implode(',', $author_ids) . ')');
+    $result = $db->query($db->sql());
+    while ($row = $result->fetch()) {
+        $array_authors[$row['id']] = $row['name_author'];
+    }
+}
+
+if (!empty($tag_ids)) {
+    $tag_ids = array_map('intval', array_unique(array_merge(...$tag_ids)));
+    $db->sqlreset()->select('id, title')->from(NV_PREFIXLANG . '_' . $module_data . '_tags')->where('id IN (' . implode(',', $tag_ids) . ')');
+    $result = $db->query($db->sql());
+    while ($row = $result->fetch()) {
+        $array_tag[$row['id']] = $row['title'];
+    }
+}
 
 $xtpl = new XTemplate('main.tpl', NV_ROOTDIR . '/themes/' . $global_config['module_theme'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', \NukeViet\Core\Language::$lang_module);
@@ -146,6 +231,7 @@ $xtpl->assign('MODULE_FILE', $module_file);
 $xtpl->assign('OP', $op);
 
 $xtpl->assign('LINK_ADD_NEW', NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=content');
+$xtpl->assign('LINK_IMPORT', NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=import');
 
 // Chuyển tìm kiếm sang ngày tháng
 $array_search['from'] = empty($array_search['from']) ? '' : nv_date('d-m-Y', $array_search['from']);
@@ -153,17 +239,58 @@ $array_search['to'] = empty($array_search['to']) ? '' : nv_date('d-m-Y', $array_
 
 $xtpl->assign('SEARCH', $array_search);
 
-while ($row = $result->fetch()) {
-    if (!empty($global_array_cats[$row['catid']]['status'])) {
-        $row['link'] = NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=' . $global_array_cats[$row['catid']]['alias'] . '/' . $row['alias'] . $global_config['rewrite_exturl'];
-    } else {
-        $row['link'] = '';
+if (!empty($array_catids)) {
+    foreach ($array_catids as $id => $title) {
+        $xtpl->assign('CAT', [
+            'id' => $id,
+            'title' => $title,
+            'selected' => $id == $array_search['catids'] ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.cat');
+    }
+}
+
+if (!empty($array_authors)) {
+    foreach ($array_authors as $id => $name_author) {
+        $xtpl->assign('AUTHOR', [
+            'id' => $id,
+            'name_author' => $name_author,
+            'selected' => $id == $array_search['author_id'] ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.author');
+    }
+}
+
+if (!empty($array_tags)) {
+    foreach ($array_tags as $id => $title) {
+        $xtpl->assign('TAG', [
+            'id' => $id,
+            'title' => $title,
+            'selected' => $id == $array_search['tagids'] ? ' selected="selected"' : ''
+        ]);
+        $xtpl->parse('main.tag');
+    }
+}
+
+// Xuất danh sách
+foreach ($list as $row) {
+    $row['title'] = nv_clean60($row['content'], 50);
+    $row['name_cat'] = isset($array_catids[$row['catids']]) ? $array_catids[$row['catids']] : '';
+    $row['name_author'] = isset($array_authors[$row['author_id']]) ? $array_authors[$row['author_id']] : '';
+    if (isset($row['tagids'])) {
+        $tag_ids = explode(',', $row['tagids']);
+        $tag_names = [];
+        foreach ($tag_ids as $v) {
+            if (isset($array_tag[$v])) {
+                $tag_names[] = $array_tag[$v];
+            }
+        }
+        $row['name_tags'] = implode(', ', $tag_names);
     }
     $row['url_edit'] = NV_BASE_ADMINURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&amp;' . NV_NAME_VARIABLE . '=' . $module_name . '&amp;' . NV_OP_VARIABLE . '=content&amp;id=' . $row['id'];
     $row['status_render'] = $row['status'] ? ' checked="checked"' : '';
-    $row['add_time'] = nv_date('d/m/Y H:i', $row['add_time']);
-    $row['edit_time'] = $row['edit_time'] ? nv_date('d/m/Y H:i', $row['edit_time']) : '';
-
+    $row['addtime'] = nv_date('d/m/Y H:i', $row['addtime']);
+    $row['updatetime'] = $row['updatetime'] ? nv_date('d/m/Y H:i', $row['updatetime']) : '';
     $xtpl->assign('ROW', $row);
     $xtpl->parse('main.loop');
 }
@@ -174,7 +301,6 @@ if (!empty($generate_page)) {
     $xtpl->assign('GENERATE_PAGE', $generate_page);
     $xtpl->parse('main.generate_page');
 }
-
 // Xuất các phần sắp xếp
 foreach ($order_fields as $field) {
     $url = $base_url_order;
@@ -195,6 +321,11 @@ foreach ($order_fields as $field) {
 
     $xtpl->assign(strtoupper('URL_ORDER_' . $field), $url);
     $xtpl->assign(strtoupper('ICON_ORDER_' . $field), $icon);
+}
+
+if (!empty($error)) {
+    $xtpl->assign('ERROR', implode('<br />', $error));
+    $xtpl->parse('main.error');
 }
 
 $xtpl->parse('main');

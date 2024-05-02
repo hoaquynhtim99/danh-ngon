@@ -22,5 +22,7 @@ $module_version = [
     'date' => 'Saturday, April 20, 2024 4:24:00 PM GMT+07:00',
     'author' => 'PHAN TAN DUNG <phantandung92@gmail.com>',
     'note' => '',
-    'uploads_dir' => []
+    'uploads_dir' => [
+        $module_upload
+    ]
 ];

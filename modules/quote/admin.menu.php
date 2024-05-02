@@ -20,3 +20,5 @@ $allow_func = [
 ];
 
 $submenu['cats'] = $nv_Lang->getModule('cats_manager');
+$submenu['author'] = $nv_Lang->getModule('author_admin');
+$submenu['tag'] = $nv_Lang->getModule('tag_admin');
