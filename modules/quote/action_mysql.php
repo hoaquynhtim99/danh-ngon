@@ -68,7 +68,7 @@ $sql_create_module[] = "CREATE TABLE " . $db_config['prefix'] . "_" . $lang . "_
   id smallint(4) unsigned NOT NULL AUTO_INCREMENT,
   nums int(11) unsigned NOT NULL DEFAULT '0' COMMENT 'Số lượng',
   title varchar(190) NOT NULL DEFAULT '' COMMENT 'Tiêu đề',
-  description text NOT NULL COMMENT 'Note',
+  description text COMMENT 'Note',
   addtime int(11) unsigned NOT NULL DEFAULT '0',
   updatetime int(11) unsigned NOT NULL DEFAULT '0',
   weight smallint(4) unsigned NOT NULL DEFAULT '0',
